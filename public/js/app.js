@@ -1,7 +1,4 @@
-import './bootstrap';
-import $ from 'jquery';
-
-window.$ = window.jQuery = $;
+axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 $(function () {
     $('[data-nav-toggle]').on('click', function () {

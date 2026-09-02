@@ -10,8 +10,10 @@ that can run PHP-FPM + a queue worker + MySQL.
   `json`, `bcmath`, `fileinfo`, `gd` (used by spatie/laravel-medialibrary for image handling).
 - MySQL 8+ or MariaDB 10.6+.
 - Composer 2.x.
-- Node 20+ / npm (build step only — not needed at runtime).
 - A process supervisor (systemd or Supervisor) to keep the queue worker alive.
+
+Front-end assets (`public/css`, `public/js`, `public/vendor`) are plain, unbundled files
+committed to the repo — there's no Node/npm/build step at deploy time.
 
 ## 2. Environment variables
 
@@ -39,8 +41,6 @@ Copy `.env.example` to `.env` and set, at minimum:
 
 ```bash
 composer install --no-dev --optimize-autoloader
-npm ci
-npm run build
 php artisan storage:link
 php artisan migrate --force
 ```
