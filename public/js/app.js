@@ -133,4 +133,70 @@ $(function () {
     $(document).on('click', '[data-fill-address]', function () {
         $('#details_delivery_address').val($(this).data('fill-address'));
     });
+
+    $('[data-hero-carousel]').each(function () {
+        var $carousel = $(this);
+        var $hero = $carousel.closest('.hero');
+        var $slides = $carousel.find('.hero-carousel__slide');
+        var $dots = $hero.find('[data-hero-dot]');
+        var current = 0;
+        var timer = null;
+
+        function show(index) {
+            current = (index + $slides.length) % $slides.length;
+            $slides.removeClass('is-active').eq(current).addClass('is-active');
+            $dots.removeClass('is-active').eq(current).addClass('is-active');
+        }
+
+        function start() {
+            stop();
+            if ($slides.length > 1) {
+                timer = setInterval(function () { show(current + 1); }, 6000);
+            }
+        }
+
+        function stop() {
+            if (timer) {
+                clearInterval(timer);
+                timer = null;
+            }
+        }
+
+        $dots.on('click', function () {
+            show($(this).index());
+            start();
+        });
+
+        $hero.on('mouseenter', stop).on('mouseleave', start);
+
+        start();
+    });
+
+    $('[data-carousel-prev], [data-carousel-next]').on('click', function () {
+        var $track = $(this).closest('.section, .card').find('[data-carousel-track]').first();
+        if (!$track.length) return;
+
+        var $item = $track.children().first();
+        var amount = ($item.outerWidth(true) || 300) * 2;
+        var direction = $(this).is('[data-carousel-prev]') ? -1 : 1;
+
+        $track.stop(true).animate({ scrollLeft: $track.scrollLeft() + amount * direction }, 400);
+    });
+
+    if ('IntersectionObserver' in window) {
+        var revealObserver = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15 });
+
+        document.querySelectorAll('.reveal').forEach(function (el) {
+            revealObserver.observe(el);
+        });
+    } else {
+        $('.reveal').addClass('is-visible');
+    }
 });

@@ -680,6 +680,78 @@ table {
     pointer-events: none;
 }
 
+.hero-carousel {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+}
+
+.hero-carousel__slide {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    transform: scale(1);
+    transition: opacity 1.6s ease;
+}
+
+.hero-carousel__slide.is-active {
+    opacity: 1;
+    animation: heroKenBurns 12s ease-in-out infinite alternate;
+}
+
+.hero-carousel__overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(155deg, rgba(7, 26, 48, 0.93) 0%, rgba(10, 61, 124, 0.86) 55%, rgba(0, 104, 201, 0.78) 130%);
+}
+
+.hero-carousel__dots {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 2rem;
+}
+
+.hero-carousel__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.35);
+    cursor: pointer;
+    padding: 0;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.hero-carousel__dot:hover {
+    background: rgba(255, 255, 255, 0.6);
+}
+
+.hero-carousel__dot.is-active {
+    background: #fff;
+    transform: scale(1.25);
+}
+
+@keyframes heroKenBurns {
+    from { transform: scale(1); }
+    to { transform: scale(1.1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero-carousel__slide.is-active {
+        animation: none;
+    }
+}
+
+.hero .container {
+    position: relative;
+    z-index: 2;
+}
+
 .hero__content {
     position: relative;
     text-align: center;
@@ -1664,5 +1736,125 @@ nav[role="navigation"] span[aria-current="page"] span {
 
     .summary-card {
         position: static;
+    }
+}
+
+/* ---------- Horizontal card carousels ---------- */
+
+.carousel {
+    position: relative;
+}
+
+.carousel-track {
+    display: flex;
+    gap: 1.5rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    padding-bottom: 0.5rem;
+    margin-bottom: -0.5rem;
+    scrollbar-width: thin;
+}
+
+.carousel-track::-webkit-scrollbar {
+    height: 6px;
+}
+
+.carousel-track::-webkit-scrollbar-thumb {
+    background: var(--color-border-strong);
+    border-radius: var(--radius-pill);
+}
+
+.carousel-track > * {
+    scroll-snap-align: start;
+    flex: 0 0 280px;
+}
+
+.carousel-nav {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.carousel-nav button {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1.5px solid var(--color-border-strong);
+    background: var(--color-bg);
+    color: var(--color-text);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease;
+}
+
+.carousel-nav button:hover {
+    border-color: var(--color-action);
+    color: var(--color-action);
+    background: var(--color-action-light);
+}
+
+.carousel-nav svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* ---------- Testimonial cards ---------- */
+
+.testimonial-card {
+    flex: 0 0 320px;
+    scroll-snap-align: start;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-xs);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+}
+
+.testimonial-card__head {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.testimonial-card__quote {
+    color: var(--color-text);
+    font-size: 0.95rem;
+    margin: 0;
+    line-height: 1.6;
+}
+
+/* ---------- Scroll reveal ---------- */
+
+.reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .reveal {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+}
+
+@media (max-width: 640px) {
+    .carousel-track > * {
+        flex-basis: 240px;
+    }
+
+    .testimonial-card {
+        flex-basis: 260px;
     }
 }

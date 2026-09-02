@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Contracts\View\View;
 use Modules\Listings\Models\Listing;
+use Modules\Reviews\Models\Review;
 use Modules\Services\Models\Service;
 use Modules\Services\Models\ServiceCategory;
 
@@ -31,6 +32,15 @@ class HomeController extends Controller
 
         $categories = ServiceCategory::orderBy('name')->get();
 
-        return view('home', compact('featuredListings', 'featuredServices', 'categories'));
+        $testimonials = Review::query()
+            ->published()
+            ->whereNotNull('comment')
+            ->with('reviewer')
+            ->orderByDesc('rating')
+            ->latest()
+            ->take(6)
+            ->get();
+
+        return view('home', compact('featuredListings', 'featuredServices', 'categories', 'testimonials'));
     }
 }
