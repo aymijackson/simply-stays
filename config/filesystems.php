@@ -40,7 +40,12 @@ return [
 
         'public' => [
             'driver' => 'local',
-            'root' => storage_path('app/public'),
+            // On shared hosting where public/ is deployed out to a sibling
+            // document-root folder (symlinks unavailable), point this at that
+            // folder's storage/ dir via PUBLIC_DISK_ROOT so uploads land where
+            // they're served from directly. Defaults to the normal
+            // storage/app/public + storage:link symlink setup otherwise.
+            'root' => env('PUBLIC_DISK_ROOT', storage_path('app/public')),
             'url' => rtrim(env('APP_URL', 'http://localhost'), '/').'/storage',
             'visibility' => 'public',
             'throw' => false,

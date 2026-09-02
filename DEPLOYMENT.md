@@ -48,6 +48,15 @@ php artisan migrate --force
 `storage:link` is required — listing/service photos are served from `public/storage`,
 symlinked to `storage/app/public` (spatie/laravel-medialibrary's default disk).
 
+**Shared hosting without symlink support:** if `public/` is deployed out to a sibling
+document-root folder (e.g. cPanel-style hosting where the app lives outside the web root)
+and the host doesn't allow symlinks, skip `storage:link` entirely. Instead set
+`PUBLIC_DISK_ROOT=/path/to/document-root/storage` in `.env` so uploads are written directly
+into the served folder instead of `storage/app/public`. See `scripts/deploy-public.sh`,
+which syncs `public/`'s contents into that sibling folder, rewrites `index.php`'s
+`../vendor`/`../bootstrap`/`../storage` paths to go through the app folder, and warns if
+`PUBLIC_DISK_ROOT` doesn't match the folder it just deployed to.
+
 ## 4. Cache the framework for production
 
 ```bash
