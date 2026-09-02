@@ -28,7 +28,7 @@ class AppServiceProvider extends ServiceProvider
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
 
-        View::composer(['layouts.partials.nav', 'layouts.partials.footer'], function ($view) {
+        View::composer(['layouts.app', 'layouts.partials.nav', 'layouts.partials.footer'], function ($view) {
             static $settings;
             $settings ??= SiteSetting::current();
             $view->with('siteSettings', $settings);

@@ -30,6 +30,8 @@ class AdminSiteSettingController extends Controller
             'terms_content' => ['nullable', 'string'],
             'privacy_content' => ['nullable', 'string'],
             'logo' => ['nullable', 'image', 'max:2048'],
+            'color_theme' => ['required', 'in:'.implode(',', array_keys(SiteSetting::COLOR_THEMES))],
+            'layout_style' => ['required', 'in:'.implode(',', array_keys(SiteSetting::LAYOUT_STYLES))],
         ]);
 
         $settings = SiteSetting::current();

@@ -14,6 +14,7 @@
     --color-action: #0068c9;
     --color-action-dark: #00509b;
     --color-action-light: #eaf4ff;
+    --color-action-tint: #4fa8ff;
     --color-accent: #f2a900;
     --color-accent-dark: #c98a00;
     --color-accent-light: #fef3d9;
@@ -48,6 +49,108 @@
     --shadow-lg: 0 24px 56px rgba(10, 37, 64, 0.18);
 
     --container-width: 1200px;
+}
+
+/* ---------- Color themes ----------
+   The "navy" theme above is the default (:root). Each alternate theme
+   overrides only the brand colors + placeholder-gradient tint; neutrals,
+   semantic colors, and the shared gold accent (ratings/badges) stay fixed
+   across themes so they remain legible regardless of the active palette. */
+
+[data-theme="sunset"] {
+    --color-navy-950: #2b1410;
+    --color-navy-900: #3d1f16;
+    --color-navy-800: #5a2e1f;
+    --color-primary: #c33d2e;
+    --color-primary-dark: #9c2f22;
+    --color-primary-light: #fdece8;
+    --color-action: #e8623f;
+    --color-action-dark: #c94d2c;
+    --color-action-light: #fff0e9;
+    --color-action-tint: #f4a077;
+}
+
+[data-theme="forest"] {
+    --color-navy-950: #0c2a1f;
+    --color-navy-900: #123a2b;
+    --color-navy-800: #1c5240;
+    --color-primary: #1f7a5c;
+    --color-primary-dark: #155c44;
+    --color-primary-light: #e6f5ef;
+    --color-action: #1f9d74;
+    --color-action-dark: #167a5a;
+    --color-action-light: #e5f7f0;
+    --color-action-tint: #6fd6ab;
+}
+
+[data-theme="slate"] {
+    --color-navy-950: #14181f;
+    --color-navy-900: #1c222c;
+    --color-navy-800: #2a323f;
+    --color-primary: #33404f;
+    --color-primary-dark: #232c37;
+    --color-primary-light: #eef1f4;
+    --color-action: #0891b2;
+    --color-action-dark: #0e7490;
+    --color-action-light: #e6f7fa;
+    --color-action-tint: #5fcbe0;
+}
+
+[data-theme="gold"] {
+    --color-navy-950: #2a1120;
+    --color-navy-900: #3d1830;
+    --color-navy-800: #5c2447;
+    --color-primary: #7a2856;
+    --color-primary-dark: #5c1d40;
+    --color-primary-light: #f8e9f1;
+    --color-action: #9c2b4e;
+    --color-action-dark: #7a2039;
+    --color-action-light: #fbe9ee;
+    --color-action-tint: #e08aa4;
+}
+
+/* ---------- Layout styles ----------
+   "standard" (default) is the current design: photo hero carousel, moderate
+   radius/shadow. The alternates only touch shape/depth tokens and the hero
+   presentation — no template structure changes. */
+
+[data-layout="minimal"] {
+    --radius-sm: 4px;
+    --radius: 6px;
+    --radius-lg: 8px;
+    --shadow-xs: none;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+[data-layout="minimal"] .hero-carousel,
+[data-layout="minimal"] .hero-carousel__overlay,
+[data-layout="minimal"] .hero::before {
+    display: none;
+}
+
+[data-layout="minimal"] .hero {
+    background: var(--color-navy-950);
+    padding: 2.5rem 0 4rem;
+}
+
+[data-layout="bold"] {
+    --radius-sm: 12px;
+    --radius: 20px;
+    --radius-lg: 30px;
+    --shadow-xs: 0 2px 6px rgba(10, 37, 64, 0.10);
+    --shadow-sm: 0 6px 16px rgba(10, 37, 64, 0.14);
+    --shadow-md: 0 16px 40px rgba(10, 37, 64, 0.18);
+    --shadow-lg: 0 32px 72px rgba(10, 37, 64, 0.24);
+}
+
+[data-layout="bold"] .hero {
+    padding: 4.5rem 0 8rem;
+}
+
+[data-layout="bold"] .hero h1 {
+    font-size: 3.1rem;
 }
 
 /* ---------- Reset ---------- */
@@ -459,11 +562,11 @@ table {
     opacity: 0.9;
 }
 
-.ph-grad-1 { background: linear-gradient(135deg, #0a3d7c, #0068c9); }
-.ph-grad-2 { background: linear-gradient(135deg, #0a2540, #10345a); }
-.ph-grad-3 { background: linear-gradient(135deg, #00509b, #4fa8ff); }
-.ph-grad-4 { background: linear-gradient(135deg, #10345a, #0068c9); }
-.ph-grad-5 { background: linear-gradient(135deg, #071a30, #0a3d7c); }
+.ph-grad-1 { background: linear-gradient(135deg, var(--color-primary), var(--color-action)); }
+.ph-grad-2 { background: linear-gradient(135deg, var(--color-navy-900), var(--color-navy-800)); }
+.ph-grad-3 { background: linear-gradient(135deg, var(--color-action-dark), var(--color-action-tint)); }
+.ph-grad-4 { background: linear-gradient(135deg, var(--color-navy-800), var(--color-action)); }
+.ph-grad-5 { background: linear-gradient(135deg, var(--color-navy-950), var(--color-primary)); }
 
 /* ---------- Badges ---------- */
 
@@ -705,7 +808,10 @@ table {
     position: absolute;
     inset: 0;
     z-index: 1;
-    background: linear-gradient(155deg, rgba(7, 26, 48, 0.93) 0%, rgba(10, 61, 124, 0.86) 55%, rgba(0, 104, 201, 0.78) 130%);
+    background: linear-gradient(155deg,
+        color-mix(in srgb, var(--color-navy-950) 93%, transparent) 0%,
+        color-mix(in srgb, var(--color-primary) 86%, transparent) 55%,
+        color-mix(in srgb, var(--color-action) 78%, transparent) 130%);
 }
 
 .hero-carousel__dots {

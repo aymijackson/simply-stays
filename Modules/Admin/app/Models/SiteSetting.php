@@ -10,6 +10,20 @@ class SiteSetting extends Model implements HasMedia
 {
     use InteractsWithMedia;
 
+    public const COLOR_THEMES = [
+        'navy' => 'Navy (default)',
+        'sunset' => 'Sunset',
+        'forest' => 'Forest',
+        'slate' => 'Slate',
+        'gold' => 'Gold Luxe',
+    ];
+
+    public const LAYOUT_STYLES = [
+        'standard' => 'Standard',
+        'minimal' => 'Minimal',
+        'bold' => 'Bold',
+    ];
+
     protected $fillable = [
         'contact_email',
         'contact_phone',
@@ -20,6 +34,8 @@ class SiteSetting extends Model implements HasMedia
         'twitter_url',
         'terms_content',
         'privacy_content',
+        'color_theme',
+        'layout_style',
     ];
 
     public static function current(): self

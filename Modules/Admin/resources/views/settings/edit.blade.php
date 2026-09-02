@@ -2,6 +2,21 @@
 
 @section('title', 'Site settings')
 
+@php
+    $themeSwatches = [
+        'navy' => ['#0a3d7c', '#0068c9'],
+        'sunset' => ['#c33d2e', '#e8623f'],
+        'forest' => ['#1f7a5c', '#1f9d74'],
+        'slate' => ['#33404f', '#0891b2'],
+        'gold' => ['#7a2856', '#9c2b4e'],
+    ];
+    $layoutDescriptions = [
+        'standard' => 'Photo hero carousel, moderate rounding and shadow.',
+        'minimal' => 'Flat solid hero, sharp corners, no shadows.',
+        'bold' => 'Bigger rounding, deeper shadows, larger hero text.',
+    ];
+@endphp
+
 @section('content')
 <div class="page page--tight">
     <div class="container">
@@ -39,6 +54,38 @@
                     <p class="form-hint">PNG or SVG with a transparent background works best. Uploading a new file replaces the current logo.</p>
                     @error('logo') <p class="form-error">{{ $message }}</p> @enderror
                 </div>
+
+                <hr>
+
+                <h3>Color theme</h3>
+                <p class="form-hint">Changes the whole site's palette. Selecting an option previews it on this page immediately &mdash; nothing changes for visitors until you save.</p>
+                <div class="radio-card-group" style="flex-wrap: wrap;">
+                    @foreach (\Modules\Admin\Models\SiteSetting::COLOR_THEMES as $value => $label)
+                        <label class="radio-card" style="flex: 0 0 auto; min-width: 140px;">
+                            <input type="radio" name="color_theme" value="{{ $value }}" data-theme-option @checked(old('color_theme', $settings->color_theme) === $value)>
+                            <span style="display: flex; align-items: center; gap: 0.5rem;">
+                                <span style="width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0; background: linear-gradient(135deg, {{ $themeSwatches[$value][0] }}, {{ $themeSwatches[$value][1] }});"></span>
+                                {{ $label }}
+                            </span>
+                        </label>
+                    @endforeach
+                </div>
+                @error('color_theme') <p class="form-error">{{ $message }}</p> @enderror
+
+                <h3 style="margin-top: 1.5rem;">Layout style</h3>
+                <p class="form-hint">Controls corner rounding, shadow depth, and the hero section's presentation.</p>
+                <div class="radio-card-group" style="flex-wrap: wrap;">
+                    @foreach (\Modules\Admin\Models\SiteSetting::LAYOUT_STYLES as $value => $label)
+                        <label class="radio-card" style="flex: 1 1 200px;">
+                            <input type="radio" name="layout_style" value="{{ $value }}" data-layout-option @checked(old('layout_style', $settings->layout_style) === $value)>
+                            <span>
+                                <strong style="display: block;">{{ $label }}</strong>
+                                <span class="form-hint" style="margin: 0;">{{ $layoutDescriptions[$value] }}</span>
+                            </span>
+                        </label>
+                    @endforeach
+                </div>
+                @error('layout_style') <p class="form-error">{{ $message }}</p> @enderror
 
                 <hr>
 

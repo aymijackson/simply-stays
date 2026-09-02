@@ -183,6 +183,14 @@ $(function () {
         $track.stop(true).animate({ scrollLeft: $track.scrollLeft() + amount * direction }, 400);
     });
 
+    $(document).on('change', '[data-theme-option]', function () {
+        document.documentElement.setAttribute('data-theme', this.value);
+    });
+
+    $(document).on('change', '[data-layout-option]', function () {
+        document.documentElement.setAttribute('data-layout', this.value);
+    });
+
     if ('IntersectionObserver' in window) {
         var revealObserver = new IntersectionObserver(function (entries) {
             entries.forEach(function (entry) {
