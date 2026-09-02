@@ -1519,6 +1519,29 @@ nav[role="navigation"] span[aria-current="page"] span {
     max-width: 280px;
 }
 
+.footer-social {
+    display: flex;
+    gap: 0.6rem;
+    margin-top: 1rem;
+}
+
+.footer-social a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.footer-social a:hover {
+    background: rgba(255, 255, 255, 0.18);
+    color: #fff;
+    text-decoration: none;
+}
+
 .footer-bottom {
     display: flex;
     align-items: center;
@@ -1527,6 +1550,19 @@ nav[role="navigation"] span[aria-current="page"] span {
     font-size: 0.85rem;
     flex-wrap: wrap;
     gap: 1rem;
+}
+
+.footer-legal-links {
+    display: flex;
+    gap: 1.25rem;
+}
+
+.footer-legal-links a {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.footer-legal-links a:hover {
+    color: #fff;
 }
 
 /* ---------- Responsive ---------- */

@@ -1,8 +1,12 @@
 <header class="site-header">
     <div class="container site-header__bar">
         <a href="{{ url('/') }}" class="brand">
-            <span class="brand__mark"><x-icon name="home" style="width:18px;height:18px;" /></span>
-            Short Stay
+            @if ($siteSettings->logoUrl())
+                <img src="{{ $siteSettings->logoUrl() }}" alt="{{ config('app.name') }}" style="height: 32px; width: auto;">
+            @else
+                <span class="brand__mark"><x-icon name="home" style="width:18px;height:18px;" /></span>
+                Short Stay
+            @endif
         </a>
 
         <button type="button" class="nav-toggle" data-nav-toggle aria-label="Toggle navigation">

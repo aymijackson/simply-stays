@@ -14,6 +14,7 @@
                 <a href="{{ route('admin.events.index') }}" class="btn btn-outline btn-sm">Events</a>
                 <a href="{{ route('admin.events.settings.edit') }}" class="btn btn-outline btn-sm">Event settings</a>
                 <a href="{{ route('admin.activity.index') }}" class="btn btn-outline btn-sm">Activity log</a>
+                <a href="{{ route('admin.settings.edit') }}" class="btn btn-outline btn-sm">Site settings</a>
             </div>
         </div>
 

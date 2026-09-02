@@ -51,6 +51,11 @@ class Icon extends Component
         'play' => '<circle cx="12" cy="12" r="9"/><path d="m10 8.5 5.5 3.5-5.5 3.5v-7Z" fill="currentColor" stroke="none"/>',
         'image' => '<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="m4 17 5-5 3.5 3.5L17 11l3 3"/>',
         'expand' => '<path d="M8 3H4v4M16 3h4v4M8 21H4v-4M16 21h4v-4"/>',
+        'mail' => '<rect x="2.5" y="4.5" width="19" height="15" rx="2"/><path d="m3 6.5 9 6.5 9-6.5"/>',
+        'phone' => '<path d="M4.5 4h3.5l1.5 5-2.5 1.5a12 12 0 0 0 5.5 5.5l1.5-2.5 5 1.5v3.5a2 2 0 0 1-2.2 2A17 17 0 0 1 2.5 6.2 2 2 0 0 1 4.5 4Z"/>',
+        'facebook' => '<path d="M14.5 21v-7.5h2.5l.5-3.5h-3V7.8c0-1 .3-1.7 1.7-1.7h1.8V3c-.3 0-1.4-.1-2.6-.1-2.6 0-4.4 1.6-4.4 4.5V10H8v3.5h2.5V21h4Z" fill="currentColor" stroke="none"/>',
+        'instagram' => '<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/>',
+        'social-x' => '<path d="M4 4l16 16M20 4 4 20"/>',
     ];
 
     public function __construct(public string $name, public string $class = '') {}
