@@ -5,7 +5,7 @@
                 <img src="{{ $siteSettings->logoUrl() }}" alt="{{ config('app.name') }}" style="height: 32px; width: auto;">
             @else
                 <span class="brand__mark"><x-icon name="home" style="width:18px;height:18px;" /></span>
-                Short Stay
+                {{ config('app.name') }}
             @endif
         </a>
 

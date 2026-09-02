@@ -7,7 +7,7 @@
                         <img src="{{ $siteSettings->logoUrl() }}" alt="{{ config('app.name') }}" style="height: 28px; width: auto;">
                     @else
                         <span class="brand__mark"><x-icon name="home" style="width:18px;height:18px;" /></span>
-                        Short Stay
+                        {{ config('app.name') }}
                     @endif
                 </a>
                 <p>{{ $siteSettings->footer_about ?: "Stays, transport, and laundry — booked and paid for in one place, wherever you're headed next." }}</p>
