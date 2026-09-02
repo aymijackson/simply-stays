@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@yield('title', 'Short Stay') &mdash; {{ config('app.name') }}</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @stack('styles')
+</head>
+<body>
+    @include('layouts.partials.nav')
+
+    @if (session('status'))
+        <div class="container" style="padding-top: 1.5rem;">
+            <x-alert type="success">{{ session('status') }}</x-alert>
+        </div>
+    @endif
+
+    <main>
+        @yield('content')
+    </main>
+
+    @include('layouts.partials.footer')
+
+    <div id="lightbox-overlay" class="lightbox" style="display:none;">
+        <button type="button" class="lightbox__close" data-lightbox-close aria-label="Close"><x-icon name="x" /></button>
+        <button type="button" class="lightbox__prev" data-lightbox-prev aria-label="Previous"><x-icon name="chevron-left" /></button>
+        <div class="lightbox__stage" data-lightbox-stage></div>
+        <button type="button" class="lightbox__next" data-lightbox-next aria-label="Next"><x-icon name="chevron-right" /></button>
+    </div>
+
+    @stack('scripts')
+</body>
+</html>

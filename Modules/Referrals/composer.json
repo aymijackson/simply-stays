@@ -1,0 +1,30 @@
+{
+    "name": "nwidart/referrals",
+    "description": "",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Referrals\\": "app/",
+            "Modules\\Referrals\\Database\\Factories\\": "database/factories/",
+            "Modules\\Referrals\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Referrals\\Tests\\": "tests/"
+        }
+    }
+}

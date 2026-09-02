@@ -1,0 +1,12 @@
+{
+    "Core": true,
+    "Auth": true,
+    "Listings": true,
+    "Bookings": true,
+    "Payments": true,
+    "Services": true,
+    "Referrals": true,
+    "Reviews": true,
+    "Admin": true,
+    "Events": true
+}
