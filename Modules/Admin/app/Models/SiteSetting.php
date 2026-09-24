@@ -27,6 +27,7 @@ class SiteSetting extends Model implements HasMedia
     protected $fillable = [
         'contact_email',
         'contact_phone',
+        'contact_phone_2',
         'contact_address',
         'footer_about',
         'facebook_url',

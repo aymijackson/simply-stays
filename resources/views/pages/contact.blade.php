@@ -19,12 +19,17 @@
                 </div>
             @endif
 
-            @if ($settings->contact_phone)
+            @if ($settings->contact_phone || $settings->contact_phone_2)
                 <div class="trust-item" style="margin-bottom: 1.25rem;">
                     <span class="trust-item__icon"><x-icon name="phone" style="width:18px;height:18px;" /></span>
                     <div>
                         <h3>Phone</h3>
-                        <p><a href="tel:{{ $settings->contact_phone }}">{{ $settings->contact_phone }}</a></p>
+                        @if ($settings->contact_phone)
+                            <p><a href="tel:{{ $settings->contact_phone }}">{{ $settings->contact_phone }}</a></p>
+                        @endif
+                        @if ($settings->contact_phone_2)
+                            <p><a href="tel:{{ $settings->contact_phone_2 }}">{{ $settings->contact_phone_2 }}</a></p>
+                        @endif
                     </div>
                 </div>
             @endif
@@ -39,7 +44,7 @@
                 </div>
             @endif
 
-            @unless ($settings->contact_email || $settings->contact_phone || $settings->contact_address)
+            @unless ($settings->contact_email || $settings->contact_phone || $settings->contact_phone_2 || $settings->contact_address)
                 <p>Contact details haven't been added yet.</p>
             @endunless
         </div>

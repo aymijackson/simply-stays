@@ -22,6 +22,7 @@ class AdminSiteSettingController extends Controller
         $data = $request->validate([
             'contact_email' => ['nullable', 'email', 'max:255'],
             'contact_phone' => ['nullable', 'string', 'max:50'],
+            'contact_phone_2' => ['nullable', 'string', 'max:50'],
             'contact_address' => ['nullable', 'string', 'max:255'],
             'footer_about' => ['nullable', 'string', 'max:1000'],
             'facebook_url' => ['nullable', 'url', 'max:255'],

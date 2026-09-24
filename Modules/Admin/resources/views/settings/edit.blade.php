@@ -101,6 +101,11 @@
                         <input type="text" id="contact_phone" name="contact_phone" value="{{ old('contact_phone', $settings->contact_phone) }}" class="form-control">
                         @error('contact_phone') <p class="form-error">{{ $message }}</p> @enderror
                     </div>
+                    <div class="form-group">
+                        <label class="form-label" for="contact_phone_2">Support phone (alternate)</label>
+                        <input type="text" id="contact_phone_2" name="contact_phone_2" value="{{ old('contact_phone_2', $settings->contact_phone_2) }}" class="form-control">
+                        @error('contact_phone_2') <p class="form-error">{{ $message }}</p> @enderror
+                    </div>
                 </div>
                 <div class="form-group">
                     <label class="form-label" for="contact_address">Address</label>

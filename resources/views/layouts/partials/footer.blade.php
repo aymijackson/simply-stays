@@ -56,6 +56,9 @@
                     @if ($siteSettings->contact_phone)
                         <li><a href="tel:{{ $siteSettings->contact_phone }}">{{ $siteSettings->contact_phone }}</a></li>
                     @endif
+                    @if ($siteSettings->contact_phone_2)
+                        <li><a href="tel:{{ $siteSettings->contact_phone_2 }}">{{ $siteSettings->contact_phone_2 }}</a></li>
+                    @endif
                 </ul>
             </div>
         </div>
