@@ -9,6 +9,7 @@
         'forest' => ['#1f7a5c', '#1f9d74'],
         'slate' => ['#33404f', '#0891b2'],
         'gold' => ['#7a2856', '#9c2b4e'],
+        'premium' => ['#5b3684', '#b8862c'],
     ];
     $layoutDescriptions = [
         'standard' => 'Photo hero carousel, moderate rounding and shadow.',

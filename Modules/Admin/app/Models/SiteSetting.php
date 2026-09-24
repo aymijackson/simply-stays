@@ -16,6 +16,7 @@ class SiteSetting extends Model implements HasMedia
         'forest' => 'Forest',
         'slate' => 'Slate',
         'gold' => 'Gold Luxe',
+        'premium' => 'Premium (Purple & Gold)',
     ];
 
     public const LAYOUT_STYLES = [

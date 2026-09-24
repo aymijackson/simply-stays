@@ -109,6 +109,19 @@
     --color-action-tint: #e08aa4;
 }
 
+[data-theme="premium"] {
+    --color-navy-950: #241333;
+    --color-navy-900: #331c47;
+    --color-navy-800: #4a2c66;
+    --color-primary: #5b3684;
+    --color-primary-dark: #452870;
+    --color-primary-light: #f1e9f7;
+    --color-action: #b8862c;
+    --color-action-dark: #96701f;
+    --color-action-light: #faf1dc;
+    --color-action-tint: #dcb968;
+}
+
 /* ---------- Layout styles ----------
    "standard" (default) is the current design: photo hero carousel, moderate
    radius/shadow. The alternates only touch shape/depth tokens and the hero
