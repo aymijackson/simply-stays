@@ -4,6 +4,7 @@ namespace Modules\Listings\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Modules\Core\Enums\Currency;
@@ -18,8 +19,8 @@ class HostListingController extends Controller
 {
     public function index(): View
     {
-        $listings = Listing::with('property')
-            ->whereHas('property', fn ($query) => $query->where('host_id', Auth::id()))
+        $listings = $this->availableListingsQuery()
+            ->with('property.host')
             ->latest()
             ->get();
 
@@ -29,7 +30,7 @@ class HostListingController extends Controller
     public function create(): View
     {
         $amenities = Amenity::orderBy('name')->get();
-        $properties = Property::where('host_id', Auth::id())->orderBy('name')->get();
+        $properties = $this->availableProperties()->orderBy('name')->get();
 
         return view('listings::host.create', compact('amenities', 'properties'));
     }
@@ -38,7 +39,7 @@ class HostListingController extends Controller
     {
         $validated = $request->validated();
 
-        $property = Property::where('host_id', Auth::id())->findOrFail($validated['property_id']);
+        $property = $this->availableProperties()->findOrFail($validated['property_id']);
 
         $listing = Listing::create([
             'property_id' => $property->id,
@@ -73,7 +74,7 @@ class HostListingController extends Controller
         $this->authorizeOwner($listing);
 
         $amenities = Amenity::orderBy('name')->get();
-        $properties = Property::where('host_id', Auth::id())->orderBy('name')->get();
+        $properties = $this->availableProperties()->orderBy('name')->get();
         $selectedAmenityIds = $listing->amenities->pluck('id')->all();
 
         return view('listings::host.edit', compact('listing', 'amenities', 'properties', 'selectedAmenityIds'));
@@ -85,7 +86,7 @@ class HostListingController extends Controller
 
         $validated = $request->validated();
 
-        $property = Property::where('host_id', Auth::id())->findOrFail($validated['property_id']);
+        $property = $this->availableProperties()->findOrFail($validated['property_id']);
 
         $listing->update([
             'property_id' => $property->id,
@@ -151,5 +152,27 @@ class HostListingController extends Controller
             $listing->property->host_id === Auth::id() || Auth::user()->hasRole('Admin'),
             403
         );
+    }
+
+    private function availableProperties(): Builder
+    {
+        $query = Property::query();
+
+        if (! Auth::user()->hasRole('Admin')) {
+            $query->where('host_id', Auth::id());
+        }
+
+        return $query;
+    }
+
+    private function availableListingsQuery(): Builder
+    {
+        $query = Listing::query();
+
+        if (! Auth::user()->hasRole('Admin')) {
+            $query->whereHas('property', fn ($q) => $q->where('host_id', Auth::id()));
+        }
+
+        return $query;
     }
 }

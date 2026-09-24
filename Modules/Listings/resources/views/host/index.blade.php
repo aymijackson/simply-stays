@@ -32,7 +32,14 @@
                         </div>
                         <div style="padding: 1rem 1.1rem 1.2rem;">
                             <div class="entity-card__title">{{ $listing->title }}</div>
-                            <div class="entity-card__meta">{{ $listing->property->name }} &middot; {{ $listing->property->city }}, {{ $listing->property->country }} &middot; {{ $listing->price()->format() }}/night</div>
+                            <div class="entity-card__meta">
+                                {{ $listing->property->name }} &middot; {{ $listing->property->city }}, {{ $listing->property->country }} &middot; {{ $listing->price()->format() }}/night
+                                @auth
+                                    @if (auth()->user()->hasRole('Admin') && $listing->property->host_id !== auth()->id())
+                                        &middot; Host: {{ $listing->property->host?->name }}
+                                    @endif
+                                @endauth
+                            </div>
 
                             <div style="display: flex; gap: 0.5rem; margin-top: 1rem; flex-wrap: wrap;">
                                 <a href="{{ route('host.listings.edit', $listing) }}" class="btn btn-outline btn-sm">Edit</a>

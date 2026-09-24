@@ -4,6 +4,7 @@ namespace Modules\Listings\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Modules\Listings\Http\Requests\PropertyRequest;
@@ -14,7 +15,8 @@ class HostPropertyController extends Controller
 {
     public function index(): View
     {
-        $properties = Property::where('host_id', Auth::id())
+        $properties = $this->availableProperties()
+            ->with('host')
             ->withCount('listings')
             ->latest()
             ->get();
@@ -117,5 +119,16 @@ class HostPropertyController extends Controller
             $property->host_id === Auth::id() || Auth::user()->hasRole('Admin'),
             403
         );
+    }
+
+    private function availableProperties(): Builder
+    {
+        $query = Property::query();
+
+        if (! Auth::user()->hasRole('Admin')) {
+            $query->where('host_id', Auth::id());
+        }
+
+        return $query;
     }
 }

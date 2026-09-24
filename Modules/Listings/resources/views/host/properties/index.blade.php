@@ -28,7 +28,14 @@
                         </div>
                         <div style="padding: 1rem 1.1rem 1.2rem;">
                             <div class="entity-card__title">{{ $property->name }}</div>
-                            <div class="entity-card__meta">{{ $property->city }}, {{ $property->country }} &middot; {{ $property->listings_count }} {{ \Illuminate\Support\Str::plural('unit type', $property->listings_count) }}</div>
+                            <div class="entity-card__meta">
+                                {{ $property->city }}, {{ $property->country }} &middot; {{ $property->listings_count }} {{ \Illuminate\Support\Str::plural('unit type', $property->listings_count) }}
+                                @auth
+                                    @if (auth()->user()->hasRole('Admin') && $property->host_id !== auth()->id())
+                                        &middot; Host: {{ $property->host?->name }}
+                                    @endif
+                                @endauth
+                            </div>
 
                             <div style="display: flex; gap: 0.5rem; margin-top: 1rem; flex-wrap: wrap;">
                                 <a href="{{ route('host.properties.edit', $property) }}" class="btn btn-outline btn-sm">Edit</a>
