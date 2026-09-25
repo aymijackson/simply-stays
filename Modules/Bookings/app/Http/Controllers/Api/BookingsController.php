@@ -69,7 +69,7 @@ class BookingsController extends Controller
 
         $referrals->attributeForBooking($booking, $validated['referral_code'] ?? null);
 
-        $booking->listing->property->host->notify(new BookingRequested($booking));
+        $booking->listing->property->host?->notify(new BookingRequested($booking));
 
         return response()->json($this->transform($booking), 201);
     }

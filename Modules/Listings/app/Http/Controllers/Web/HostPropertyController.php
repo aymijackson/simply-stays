@@ -87,8 +87,8 @@ class HostPropertyController extends Controller
             'tax_percent' => $validated['tax_percent'] ?? 0,
         ];
 
-        if (Auth::user()->hasRole('Admin') && ! empty($validated['host_id'])) {
-            $updateData['host_id'] = $validated['host_id'];
+        if (Auth::user()->hasRole('Admin')) {
+            $updateData['host_id'] = $validated['host_id'] ?? null;
         }
 
         $property->update($updateData);

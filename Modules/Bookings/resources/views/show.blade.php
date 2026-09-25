@@ -47,7 +47,7 @@
             <hr>
 
             <p style="display: flex; align-items: center; gap: 0.5rem;"><span class="avatar" style="width:26px;height:26px;font-size:0.75rem;">{{ strtoupper(substr($booking->guest->name, 0, 1)) }}</span> Guest: {{ $booking->guest->name }}</p>
-            <p style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0;"><span class="avatar" style="width:26px;height:26px;font-size:0.75rem;">{{ strtoupper(substr($booking->listing->property->host->name, 0, 1)) }}</span> Host: {{ $booking->listing->property->host->name }}</p>
+            <p style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0;"><span class="avatar" style="width:26px;height:26px;font-size:0.75rem;">{{ strtoupper(substr($booking->listing->property->hostDisplayName(), 0, 1)) }}</span> Host: {{ $booking->listing->property->hostDisplayName() }}</p>
 
             <div style="display: flex; gap: 0.5rem; margin-top: 1.5rem; flex-wrap: wrap;">
                 @if (! $booking->isPaid() && $booking->guest_id === auth()->id() && in_array($booking->status, ['pending', 'confirmed']))

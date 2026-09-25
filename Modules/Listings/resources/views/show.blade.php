@@ -136,8 +136,8 @@
             <div class="card summary-card">
                 <h2>{{ $listing->price()->format() }} <span style="font-size: 0.9rem; color: var(--color-text-muted); font-weight: 400;">/ night</span></h2>
                 <p style="display: flex; align-items: center; gap: 0.5rem;">
-                    <span class="avatar" style="width:28px;height:28px;font-size:0.8rem;">{{ strtoupper(substr($property->host->name, 0, 1)) }}</span>
-                    Hosted by {{ $property->host->name }}
+                    <span class="avatar" style="width:28px;height:28px;font-size:0.8rem;">{{ strtoupper(substr($property->hostDisplayName(), 0, 1)) }}</span>
+                    Hosted by {{ $property->hostDisplayName() }}
                 </p>
                 @auth
                     <a href="{{ route('bookings.create', $listing) }}" class="btn btn-primary btn-block">Request to book</a>

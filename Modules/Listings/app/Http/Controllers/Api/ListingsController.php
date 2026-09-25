@@ -62,7 +62,7 @@ class ListingsController extends Controller
             'max_guests' => $listing->max_guests,
             'bedrooms' => $listing->bedrooms,
             'bathrooms' => $listing->bathrooms,
-            'host' => ['name' => $listing->property->host->name],
+            'host' => ['name' => $listing->property->hostDisplayName()],
             'amenities' => $listing->amenities->pluck('name'),
             'photos' => $listing->photoUrls(),
             'video_url' => $listing->video_url,

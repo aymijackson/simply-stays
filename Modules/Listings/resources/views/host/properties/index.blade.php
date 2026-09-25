@@ -32,7 +32,7 @@
                                 {{ $property->city }}, {{ $property->country }} &middot; {{ $property->listings_count }} {{ \Illuminate\Support\Str::plural('unit type', $property->listings_count) }}
                                 @auth
                                     @if (auth()->user()->hasRole('Admin') && $property->host_id !== auth()->id())
-                                        &middot; Host: {{ $property->host?->name }}
+                                        &middot; Host: {{ $property->hostDisplayName() }}
                                     @endif
                                 @endauth
                             </div>

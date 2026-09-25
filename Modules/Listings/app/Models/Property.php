@@ -57,6 +57,11 @@ class Property extends Model implements HasMedia
         return $this->belongsTo(User::class, 'host_id');
     }
 
+    public function hostDisplayName(): string
+    {
+        return $this->host?->name ?? $this->name;
+    }
+
     public function listings(): HasMany
     {
         return $this->hasMany(Listing::class);

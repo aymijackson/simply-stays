@@ -36,7 +36,7 @@
                                 {{ $listing->property->name }} &middot; {{ $listing->property->city }}, {{ $listing->property->country }} &middot; {{ $listing->price()->format() }}/night
                                 @auth
                                     @if (auth()->user()->hasRole('Admin') && $listing->property->host_id !== auth()->id())
-                                        &middot; Host: {{ $listing->property->host?->name }}
+                                        &middot; Host: {{ $listing->property->hostDisplayName() }}
                                     @endif
                                 @endauth
                             </div>

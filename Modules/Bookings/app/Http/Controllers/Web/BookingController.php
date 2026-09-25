@@ -91,7 +91,7 @@ class BookingController extends Controller
 
         $referrals->attributeForBooking($booking, $validated['referral_code'] ?? null);
 
-        $booking->listing->property->host->notify(new BookingRequested($booking));
+        $booking->listing->property->host?->notify(new BookingRequested($booking));
 
         return redirect()->route('bookings.show', $booking)
             ->with('status', 'Booking request sent. The host will confirm shortly.');
@@ -148,7 +148,7 @@ class BookingController extends Controller
         $booking->update(['status' => 'cancelled']);
 
         $recipient = Auth::id() === $booking->guest_id ? $booking->listing->property->host : $booking->guest;
-        $recipient->notify(new BookingCancelled($booking));
+        $recipient?->notify(new BookingCancelled($booking));
 
         return back()->with('status', 'Booking cancelled.');
     }

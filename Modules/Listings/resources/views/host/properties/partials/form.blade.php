@@ -7,11 +7,12 @@
     <div class="form-group">
         <label class="form-label" for="host_id">Hosted by</label>
         <select name="host_id" id="host_id" class="form-control">
+            <option value="" @selected(old('host_id', $property?->host_id) === null)>&mdash; None (show property name instead) &mdash;</option>
             @foreach ($hostUsers as $hostUser)
                 <option value="{{ $hostUser->id }}" @selected(old('host_id', $property?->host_id) === $hostUser->id)>{{ $hostUser->name }} ({{ $hostUser->email }})</option>
             @endforeach
         </select>
-        <p class="form-hint">Admin only: reassigns this property (and its listings) to a different host.</p>
+        <p class="form-hint">Admin only: reassigns this property (and its listings) to a different host, or clears it to show the property name instead.</p>
         @error('host_id')
             <p class="form-error">{{ $message }}</p>
         @enderror
