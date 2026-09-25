@@ -1,6 +1,22 @@
 @php
     $property = $property ?? null;
+    $hostUsers = $hostUsers ?? null;
 @endphp
+
+@if ($hostUsers)
+    <div class="form-group">
+        <label class="form-label" for="host_id">Hosted by</label>
+        <select name="host_id" id="host_id" class="form-control">
+            @foreach ($hostUsers as $hostUser)
+                <option value="{{ $hostUser->id }}" @selected(old('host_id', $property?->host_id) === $hostUser->id)>{{ $hostUser->name }} ({{ $hostUser->email }})</option>
+            @endforeach
+        </select>
+        <p class="form-hint">Admin only: reassigns this property (and its listings) to a different host.</p>
+        @error('host_id')
+            <p class="form-error">{{ $message }}</p>
+        @enderror
+    </div>
+@endif
 
 <x-input name="name" label="Property name" required value="{{ old('name', $property?->name) }}" placeholder="e.g. Luxurious Inn Stay" />
 

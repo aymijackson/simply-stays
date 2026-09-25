@@ -24,6 +24,7 @@ class PropertyRequest extends FormRequest
             'longitude' => ['nullable', 'numeric', 'between:-180,180'],
             'service_charge_percent' => ['nullable', 'numeric', 'min:0', 'max:100'],
             'tax_percent' => ['nullable', 'numeric', 'min:0', 'max:100'],
+            'host_id' => ['nullable', 'exists:users,id'],
             'photos' => ['nullable', 'array'],
             'photos.*' => ['image', 'max:5120'],
         ];

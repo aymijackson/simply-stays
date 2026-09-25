@@ -3,6 +3,7 @@
 namespace Modules\Listings\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
@@ -60,7 +61,11 @@ class HostPropertyController extends Controller
     {
         $this->authorizeOwner($property);
 
-        return view('listings::host.properties.edit', compact('property'));
+        $hostUsers = Auth::user()->hasRole('Admin')
+            ? User::role('Host')->orderBy('name')->get()
+            : null;
+
+        return view('listings::host.properties.edit', compact('property', 'hostUsers'));
     }
 
     public function update(PropertyRequest $request, Property $property): RedirectResponse
@@ -69,7 +74,7 @@ class HostPropertyController extends Controller
 
         $validated = $request->validated();
 
-        $property->update([
+        $updateData = [
             'name' => $validated['name'],
             'description' => $validated['description'] ?? null,
             'property_type' => $validated['property_type'],
@@ -80,7 +85,13 @@ class HostPropertyController extends Controller
             'longitude' => $validated['longitude'] ?? null,
             'service_charge_percent' => $validated['service_charge_percent'] ?? 0,
             'tax_percent' => $validated['tax_percent'] ?? 0,
-        ]);
+        ];
+
+        if (Auth::user()->hasRole('Admin') && ! empty($validated['host_id'])) {
+            $updateData['host_id'] = $validated['host_id'];
+        }
+
+        $property->update($updateData);
 
         if ($request->hasFile('photos')) {
             foreach ($request->file('photos') as $photo) {
