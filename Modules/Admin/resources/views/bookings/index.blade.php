@@ -1,17 +1,11 @@
-@extends('layouts.app')
+@extends('admin::layouts.admin')
 
 @section('title', 'Manage bookings')
 
 @section('content')
 <div class="page page--tight">
     <div class="container">
-        <a href="{{ route('admin.index') }}">&larr; Back to overview</a>
-
-        <h1 style="margin-top: 1rem;">Manage bookings</h1>
-
-        @if (session('status'))
-            <x-alert type="success">{{ session('status') }}</x-alert>
-        @endif
+        <h1 style="margin-top: 0;">Manage bookings</h1>
 
         <div class="card" style="overflow-x: auto;">
             <table class="data-table">

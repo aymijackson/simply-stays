@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('admin::layouts.admin')
 
 @section('title', 'Site settings')
 
@@ -21,15 +21,9 @@
 @section('content')
 <div class="page page--tight">
     <div class="container">
-        <a href="{{ route('admin.index') }}">&larr; Back to admin overview</a>
-
-        <div class="card" style="max-width: 720px; margin: 1rem auto 0;">
+        <div class="card" style="max-width: 720px; margin: 0 auto;">
             <h1>Site settings</h1>
             <p>Manage the logo, footer contact details, social links, and legal pages shown across the site.</p>
-
-            @if (session('status'))
-                <x-alert type="success">{{ session('status') }}</x-alert>
-            @endif
 
             <h3 style="margin-top: 1.5rem;">Logo</h3>
             @if ($settings->logoUrl())

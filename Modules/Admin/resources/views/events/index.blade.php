@@ -1,20 +1,14 @@
-@extends('layouts.app')
+@extends('admin::layouts.admin')
 
 @section('title', 'Manage events')
 
 @section('content')
 <div class="page page--tight">
     <div class="container">
-        <a href="{{ route('admin.index') }}">&larr; Back to overview</a>
-
-        <div style="display: flex; align-items: center; justify-content: space-between; margin: 1rem 0 1.5rem; flex-wrap: wrap; gap: 1rem;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin: 0 0 1.5rem; flex-wrap: wrap; gap: 1rem;">
             <h1 style="margin: 0;">Manage events</h1>
             <a href="{{ route('admin.events.settings.edit') }}" class="btn btn-outline btn-sm">Event settings</a>
         </div>
-
-        @if (session('status'))
-            <x-alert type="success">{{ session('status') }}</x-alert>
-        @endif
 
         <h2>Pending approval</h2>
         @if ($pendingEvents->isEmpty())

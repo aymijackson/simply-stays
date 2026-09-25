@@ -1,23 +1,10 @@
-@extends('layouts.app')
+@extends('admin::layouts.admin')
 
 @section('title', 'Admin overview')
 
 @section('content')
 <div class="page page--tight">
     <div class="container">
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
-            <h1 style="margin: 0;">Admin overview</h1>
-            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                <a href="{{ route('admin.users.index') }}" class="btn btn-outline btn-sm">Users</a>
-                <a href="{{ route('admin.bookings.index') }}" class="btn btn-outline btn-sm">Bookings</a>
-                <a href="{{ route('reviews.index') }}" class="btn btn-outline btn-sm">Reviews</a>
-                <a href="{{ route('admin.events.index') }}" class="btn btn-outline btn-sm">Events</a>
-                <a href="{{ route('admin.events.settings.edit') }}" class="btn btn-outline btn-sm">Event settings</a>
-                <a href="{{ route('admin.activity.index') }}" class="btn btn-outline btn-sm">Activity log</a>
-                <a href="{{ route('admin.settings.edit') }}" class="btn btn-outline btn-sm">Site settings</a>
-            </div>
-        </div>
-
         <div class="module-grid" style="margin-bottom: 1.5rem;">
             <div class="card stat-tile">
                 <p>Users</p>

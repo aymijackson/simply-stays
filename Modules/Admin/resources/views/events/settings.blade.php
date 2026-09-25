@@ -1,19 +1,13 @@
-@extends('layouts.app')
+@extends('admin::layouts.admin')
 
 @section('title', 'Event settings')
 
 @section('content')
 <div class="page page--tight">
     <div class="container">
-        <a href="{{ route('admin.events.index') }}">&larr; Back to events</a>
-
-        <div class="card" style="max-width: 560px; margin: 1rem auto 0;">
+        <div class="card" style="max-width: 560px; margin: 0 auto;">
             <h1>Event settings</h1>
             <p>Control which account types are currently allowed to submit new events. Admins can always create events.</p>
-
-            @if (session('status'))
-                <x-alert type="success">{{ session('status') }}</x-alert>
-            @endif
 
             <form method="POST" action="{{ route('admin.events.settings.update') }}">
                 @csrf

@@ -1,13 +1,11 @@
-@extends('layouts.app')
+@extends('admin::layouts.admin')
 
 @section('title', 'Activity log')
 
 @section('content')
 <div class="page page--tight">
     <div class="container">
-        <a href="{{ route('admin.index') }}">&larr; Back to overview</a>
-
-        <h1 style="margin-top: 1rem;">Activity log</h1>
+        <h1 style="margin-top: 0;">Activity log</h1>
 
         @if ($activities->isEmpty())
             <div class="card text-center" style="padding: 3rem;">

@@ -9,6 +9,14 @@ $(function () {
         $(this).closest('[data-alert]').fadeOut(150);
     });
 
+    $('[data-admin-sidebar-toggle]').on('click', function () {
+        $('[data-admin-shell]').toggleClass('is-sidebar-open');
+    });
+
+    $('[data-admin-sidebar-backdrop]').on('click', function () {
+        $('[data-admin-shell]').removeClass('is-sidebar-open');
+    });
+
     $('[data-star-picker]').each(function () {
         var $picker = $(this);
         var $input = $('#' + $picker.data('input'));

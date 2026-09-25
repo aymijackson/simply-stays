@@ -1,13 +1,11 @@
-@extends('layouts.app')
+@extends('admin::layouts.admin')
 
 @section('title', 'Manage users')
 
 @section('content')
 <div class="page page--tight">
     <div class="container">
-        <a href="{{ route('admin.index') }}">&larr; Back to overview</a>
-
-        <h1 style="margin-top: 1rem;">Manage users</h1>
+        <h1 style="margin-top: 0;">Manage users</h1>
 
         <form method="GET" action="{{ route('admin.users.index') }}" class="card" style="margin-bottom: 1.5rem;">
             <div class="form-row">
