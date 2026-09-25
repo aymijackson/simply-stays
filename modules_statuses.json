@@ -8,5 +8,6 @@
     "Referrals": true,
     "Reviews": true,
     "Admin": true,
-    "Events": true
+    "Events": true,
+    "Support": true
 }

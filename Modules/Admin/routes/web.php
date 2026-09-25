@@ -7,6 +7,7 @@ use Modules\Admin\Http\Controllers\Web\AdminController;
 use Modules\Admin\Http\Controllers\Web\AdminEventController;
 use Modules\Admin\Http\Controllers\Web\AdminEventSettingController;
 use Modules\Admin\Http\Controllers\Web\AdminSiteSettingController;
+use Modules\Admin\Http\Controllers\Web\AdminSupportController;
 use Modules\Admin\Http\Controllers\Web\AdminUserController;
 
 Route::middleware(['auth', 'role:Admin'])->prefix('admin')->name('admin.')->group(function () {
@@ -31,4 +32,9 @@ Route::middleware(['auth', 'role:Admin'])->prefix('admin')->name('admin.')->grou
     Route::get('settings', [AdminSiteSettingController::class, 'edit'])->name('settings.edit');
     Route::patch('settings', [AdminSiteSettingController::class, 'update'])->name('settings.update');
     Route::delete('settings/logo', [AdminSiteSettingController::class, 'destroyLogo'])->name('settings.logo.destroy');
+
+    Route::get('support', [AdminSupportController::class, 'index'])->name('support.index');
+    Route::get('support/{conversation}/messages', [AdminSupportController::class, 'messages'])->name('support.messages');
+    Route::post('support/{conversation}/reply', [AdminSupportController::class, 'reply'])->name('support.reply');
+    Route::patch('support/{conversation}/close', [AdminSupportController::class, 'close'])->name('support.close');
 });
