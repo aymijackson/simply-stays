@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@hasSection('title')@yield('title') &mdash; @endif{{ config('app.name') }}</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,600&display=swap">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     @stack('styles')
 </head>
@@ -29,6 +32,8 @@
         <div class="lightbox__stage" data-lightbox-stage></div>
         <button type="button" class="lightbox__next" data-lightbox-next aria-label="Next"><x-icon name="chevron-right" /></button>
     </div>
+
+    @include('layouts.partials.support-widget')
 
     <script src="{{ asset('vendor/jquery.min.js') }}"></script>
     <script src="{{ asset('vendor/axios.min.js') }}"></script>

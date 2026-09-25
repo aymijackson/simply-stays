@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends(auth()->user()->portalLayout())
 
 @section('title', 'Options — ' . $menuItem->name)
 

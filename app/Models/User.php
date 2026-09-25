@@ -61,6 +61,16 @@ class User extends Authenticatable
         return $this->roles->first()?->name;
     }
 
+    public function portalLayout(): string
+    {
+        return match ($this->primaryRole()) {
+            'Admin' => 'admin::layouts.admin',
+            'Host' => 'layouts.host',
+            'ServiceProvider' => 'layouts.provider',
+            default => 'layouts.app',
+        };
+    }
+
     public function referredByAgent(): BelongsTo
     {
         return $this->belongsTo(AgentProfile::class, 'referred_by_agent_id');

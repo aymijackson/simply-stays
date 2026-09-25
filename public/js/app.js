@@ -1,5 +1,10 @@
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
+var csrfMeta = document.querySelector('meta[name="csrf-token"]');
+if (csrfMeta) {
+    axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfMeta.getAttribute('content');
+}
+
 $(function () {
     $('[data-nav-toggle]').on('click', function () {
         $('[data-nav-menu]').toggleClass('is-open');
@@ -9,12 +14,12 @@ $(function () {
         $(this).closest('[data-alert]').fadeOut(150);
     });
 
-    $('[data-admin-sidebar-toggle]').on('click', function () {
-        $('[data-admin-shell]').toggleClass('is-sidebar-open');
+    $('[data-portal-sidebar-toggle]').on('click', function () {
+        $('[data-portal-shell]').toggleClass('is-sidebar-open');
     });
 
-    $('[data-admin-sidebar-backdrop]').on('click', function () {
-        $('[data-admin-shell]').removeClass('is-sidebar-open');
+    $('[data-portal-sidebar-backdrop]').on('click', function () {
+        $('[data-portal-shell]').removeClass('is-sidebar-open');
     });
 
     $('[data-star-picker]').each(function () {
@@ -214,5 +219,92 @@ $(function () {
         });
     } else {
         $('.reveal').addClass('is-visible');
+    }
+
+    var $supportWidget = $('[data-support-widget]');
+    if ($supportWidget.length) {
+        var $toggle = $supportWidget.find('[data-support-toggle]');
+        var $close = $supportWidget.find('[data-support-close]');
+        var $messages = $supportWidget.find('[data-support-messages]');
+        var $empty = $supportWidget.find('[data-support-empty]');
+        var $form = $supportWidget.find('[data-support-form]');
+        var $badge = $supportWidget.find('[data-support-badge]');
+        var startUrl = $supportWidget.data('start-url');
+
+        var conversationId = null;
+        var lastId = 0;
+        var pollTimer = null;
+        var startPromise = null;
+
+        function messagesUrl() {
+            return '/support/conversations/' + conversationId + '/messages';
+        }
+
+        function renderMessage(message) {
+            $empty.hide();
+            var $bubble = $('<div>').addClass('support-message support-message--' + message.sender_type);
+            $('<div>').addClass('support-message__bubble').text(message.body).appendTo($bubble);
+            $('<div>').addClass('support-message__meta').text(message.created_at).appendTo($bubble);
+            $messages.append($bubble);
+            $messages.scrollTop($messages.prop('scrollHeight'));
+        }
+
+        function poll() {
+            if (!conversationId) return;
+            axios.get(messagesUrl(), { params: { after_id: lastId } }).then(function (res) {
+                res.data.messages.forEach(function (message) {
+                    if (message.id <= lastId) return;
+                    lastId = message.id;
+                    renderMessage(message);
+                    if (!$supportWidget.hasClass('is-open') && message.sender_type === 'admin') {
+                        $badge.text('1').show();
+                    }
+                });
+            });
+        }
+
+        function ensureStarted() {
+            if (startPromise) return startPromise;
+
+            startPromise = axios.post(startUrl, {}).then(function (res) {
+                conversationId = res.data.conversation_id;
+                res.data.messages.forEach(function (message) {
+                    lastId = Math.max(lastId, message.id);
+                    renderMessage(message);
+                });
+                if (!pollTimer) pollTimer = setInterval(poll, 4000);
+            });
+
+            return startPromise;
+        }
+
+        $toggle.on('click', function () {
+            $supportWidget.toggleClass('is-open');
+            if ($supportWidget.hasClass('is-open')) {
+                $badge.hide().text('');
+                ensureStarted();
+            }
+        });
+
+        $close.on('click', function () {
+            $supportWidget.removeClass('is-open');
+        });
+
+        $form.on('submit', function (e) {
+            e.preventDefault();
+            var $input = $form.find('input[name="body"]');
+            var body = $input.val().trim();
+            if (!body) return;
+            $input.val('');
+
+            ensureStarted().then(function () {
+                axios.post(messagesUrl(), { body: body }).then(function (res) {
+                    res.data.messages.forEach(function (message) {
+                        lastId = Math.max(lastId, message.id);
+                        renderMessage(message);
+                    });
+                });
+            });
+        });
     }
 });
