@@ -2583,3 +2583,312 @@ nav[role="navigation"] span[aria-current="page"] span {
         width: calc(100vw - 2rem);
     }
 }
+
+/* ---------- Guest registration form (mirrors the printed property form) ---------- */
+
+.gform-picker {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 0 1rem;
+}
+
+.gform-filters {
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    margin-top: 1.25rem;
+}
+
+.gform-filters .form-control {
+    width: auto;
+    min-width: 200px;
+    flex: 1;
+}
+
+.gform-letterhead {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    flex-wrap: wrap;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--color-navy-950);
+}
+
+.gform-letterhead__brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.gform-letterhead__mark {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: 2px solid var(--color-navy-950);
+    display: grid;
+    place-items: center;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--color-navy-950);
+    flex-shrink: 0;
+}
+
+.gform-letterhead__name {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.45rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-navy-950);
+}
+
+.gform-letterhead__tagline {
+    font-size: 0.75rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+}
+
+.gform-letterhead__contact {
+    text-align: right;
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    line-height: 1.5;
+}
+
+.gform-title {
+    text-align: center;
+    margin: 1.25rem 0 0.5rem;
+}
+
+.gform-title h2 {
+    margin: 0;
+    font-size: 1.05rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.gform-title p {
+    margin: 0.25rem 0 0;
+    font-size: 0.85rem;
+    font-style: italic;
+    color: var(--color-text-muted);
+}
+
+.gform-section {
+    margin-top: 1.5rem;
+}
+
+.gform-section__title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--color-navy-950);
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 0.45rem 0.75rem;
+    margin: 0 0 0.9rem;
+    border-radius: 4px;
+}
+
+.gform-section__tag {
+    font-size: 0.7rem;
+    background: rgba(255, 255, 255, 0.18);
+    padding: 0.1rem 0.5rem;
+    border-radius: var(--radius-pill);
+}
+
+.gform-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 1.5rem;
+}
+
+.gform-grid .form-group {
+    margin-bottom: 0.9rem;
+}
+
+.gform-grid__wide {
+    grid-column: 1 / -1;
+}
+
+.gform-readonly {
+    padding: 0.55rem 0;
+    border-bottom: 1px solid var(--color-border-strong);
+    min-height: 2.4rem;
+}
+
+.gform-notice {
+    font-size: 0.85rem;
+    line-height: 1.55;
+    color: var(--color-text-muted);
+    margin: 0.25rem 0 0.9rem;
+}
+
+.gform-notice--privacy {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--color-border);
+}
+
+.gform-values {
+    margin: 0;
+}
+
+.gform-values > div {
+    margin-bottom: 0.75rem;
+}
+
+.gform-values dt {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+}
+
+.gform-values dd {
+    margin: 0;
+    padding: 0.3rem 0;
+    border-bottom: 1px solid var(--color-border-strong);
+    min-height: 1.9rem;
+}
+
+.gform-signature img {
+    display: block;
+    max-width: 320px;
+    max-height: 110px;
+}
+
+.gform-meta {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    margin-bottom: 1rem;
+}
+
+.gform-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+}
+
+.signature-pad__canvas {
+    display: block;
+    width: 100%;
+    height: 160px;
+    border: 1px dashed var(--color-border-strong);
+    border-radius: var(--radius-sm);
+    background: #fff;
+    touch-action: none;
+    cursor: crosshair;
+}
+
+.signature-pad__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.4rem;
+}
+
+.signature-pad__existing img {
+    display: block;
+    max-width: 320px;
+    max-height: 110px;
+    background: #fff;
+}
+
+.gform-scans {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1rem;
+}
+
+.gform-scan__preview {
+    display: block;
+    height: 130px;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    background: var(--color-bg-alt);
+    border: 1px solid var(--color-border);
+}
+
+.gform-scan__preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.gform-scan__pdf {
+    display: grid;
+    place-items: center;
+    height: 100%;
+    font-weight: 800;
+    color: var(--color-danger);
+}
+
+.gform-scan__name {
+    font-size: 0.82rem;
+    margin-top: 0.35rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+    .gform-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .gform-letterhead__contact {
+        text-align: left;
+    }
+}
+
+@media print {
+    .no-print,
+    .site-header,
+    .site-footer,
+    .portal-sidebar,
+    .portal-sidebar-backdrop,
+    .portal-topbar,
+    .support-widget {
+        display: none !important;
+    }
+
+    body,
+    .portal-main,
+    .portal-content {
+        background: #fff !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .gform--print {
+        box-shadow: none !important;
+        border: 0 !important;
+        padding: 0 !important;
+    }
+
+    .gform-section {
+        break-inside: avoid;
+    }
+
+    .gform-section__title {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .gform-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}

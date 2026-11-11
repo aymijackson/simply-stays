@@ -25,6 +25,7 @@
             ],
             'Bookings' => [
                 ['label' => 'Bookings', 'route' => 'admin.bookings.index', 'pattern' => 'admin.bookings.*', 'icon' => 'calendar'],
+                ['label' => 'Guest forms', 'route' => 'guest-forms.index', 'pattern' => 'guest-forms.*', 'icon' => 'clipboard'],
             ],
             'Events' => [
                 ['label' => 'Approvals', 'route' => 'admin.events.index', 'pattern' => 'admin.events.index', 'icon' => 'check'],

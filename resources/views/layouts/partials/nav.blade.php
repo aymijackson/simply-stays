@@ -20,6 +20,7 @@
                 <li><a href="{{ route('events.index') }}">Events</a></li>
                 @auth
                     <li><a href="{{ route('bookings.index') }}">Bookings</a></li>
+                    <li><a href="{{ route('guest-forms.index') }}">Guest forms</a></li>
                 @endauth
             </ul>
 

@@ -54,6 +54,14 @@
                     <a href="{{ route('checkout.choose', $booking) }}" class="btn btn-primary">Pay now</a>
                 @endif
 
+                @if ($booking->guest_id === auth()->id() || $booking->listing->property->host_id === auth()->id() || auth()->user()->hasRole('Admin'))
+                    @if ($registration = \Modules\Bookings\Models\GuestRegistration::where('booking_id', $booking->id)->latest()->first())
+                        <a href="{{ route('guest-forms.show', $registration) }}" class="btn btn-outline">Registration form</a>
+                    @else
+                        <a href="{{ route('guest-forms.create', ['booking' => $booking->id]) }}" class="btn btn-outline">Fill registration form</a>
+                    @endif
+                @endif
+
                 @if ($canReview)
                     <a href="{{ route('bookings.review.create', $booking) }}" class="btn btn-primary">Leave a review</a>
                 @endif
