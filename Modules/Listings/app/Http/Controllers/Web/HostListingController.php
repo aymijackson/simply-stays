@@ -139,7 +139,7 @@ class HostListingController extends Controller
     {
         $this->authorizeOwner($listing);
 
-        abort_unless($media->model_id === $listing->id, 404);
+        abort_unless($media->model_id === $listing->id && $media->model_type === $listing->getMorphClass(), 404);
 
         $media->delete();
 

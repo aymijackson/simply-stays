@@ -117,7 +117,7 @@ class HostPropertyController extends Controller
     {
         $this->authorizeOwner($property);
 
-        abort_unless($media->model_id === $property->id, 404);
+        abort_unless($media->model_id === $property->id && $media->model_type === $property->getMorphClass(), 404);
 
         $media->delete();
 

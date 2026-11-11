@@ -80,11 +80,8 @@
             @foreach ($listing->getMedia('photos') as $media)
                 <div>
                     <img src="{{ $media->getUrl() }}" alt="" style="width: 100%; height: 100px; object-fit: cover; border-radius: var(--radius-sm); margin-bottom: 0.35rem;">
-                    <form method="POST" action="{{ route('host.listings.photos.destroy', [$listing, $media]) }}" onsubmit="return confirm('Remove this photo?');">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-outline btn-block" style="color: var(--color-danger); border-color: var(--color-danger); padding: 0.3rem;">Remove</button>
-                    </form>
+                    {{-- Submits a standalone form rendered outside the main edit form (nested forms are invalid HTML). --}}
+                    <button type="submit" form="photo-delete-{{ $media->id }}" class="btn btn-outline btn-block" style="color: var(--color-danger); border-color: var(--color-danger); padding: 0.3rem;">Remove</button>
                 </div>
             @endforeach
         </div>

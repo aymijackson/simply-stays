@@ -21,6 +21,13 @@
                 @include('listings::partials.form', ['listing' => $listing, 'selectedAmenityIds' => $selectedAmenityIds])
                 <button type="submit" class="btn btn-primary btn-block">Save changes</button>
             </form>
+
+            @foreach ($listing->getMedia('photos') as $media)
+                <form id="photo-delete-{{ $media->id }}" method="POST" action="{{ route('host.listings.photos.destroy', [$listing, $media]) }}" onsubmit="return confirm('Remove this photo?');" hidden>
+                    @csrf
+                    @method('DELETE')
+                </form>
+            @endforeach
         </div>
     </div>
 </div>
