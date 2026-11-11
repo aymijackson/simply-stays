@@ -11,7 +11,9 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Modules\Bookings\Models\Booking;
 use Modules\Bookings\Models\ComplimentaryRule;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Modules\Core\Support\Money;
+use Modules\Core\Support\RichText;
 use Modules\Core\Traits\Sluggable;
 use Modules\Reviews\Models\Review;
 use Spatie\MediaLibrary\HasMedia;
@@ -105,5 +107,11 @@ class Listing extends Model implements HasMedia
     public function reviewsCount(): int
     {
         return $this->reviews()->published()->count();
+    }
+
+    /** Descriptions come from a WYSIWYG editor; sanitise on every write so stored HTML is always safe to render. */
+    protected function description(): Attribute
+    {
+        return Attribute::make(set: fn (?string $value) => RichText::normalize($value));
     }
 }

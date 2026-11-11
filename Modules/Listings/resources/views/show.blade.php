@@ -43,7 +43,11 @@
             <div>
                 <div class="card" style="margin-bottom: 1.5rem;">
                     <h2>About this place</h2>
-                    <p>{{ $listing->description ?: 'No description provided yet.' }}</p>
+                    @if (filled($listing->description))
+                        <div class="rich-text">{!! \Modules\Core\Support\RichText::toHtml($listing->description) !!}</div>
+                    @else
+                        <p>No description provided yet.</p>
+                    @endif
 
                     <div class="form-row" style="margin-top: 1.25rem; flex-wrap: wrap; gap: 1.5rem;">
                         <div style="display:flex; align-items:center; gap:0.5rem;"><x-icon name="users" style="color: var(--color-primary);" /> <strong>{{ $listing->max_guests }}</strong>&nbsp;guests</div>

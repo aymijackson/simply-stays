@@ -2892,3 +2892,76 @@ nav[role="navigation"] span[aria-current="page"] span {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
+
+/* ---------- Rich text (WYSIWYG editor + rendered output) ---------- */
+
+.rich-editor .ql-toolbar.ql-snow {
+    border-color: var(--color-border-strong);
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+    background: var(--color-bg-alt);
+    font-family: var(--font-sans);
+}
+
+.rich-editor .ql-container.ql-snow {
+    border-color: var(--color-border-strong);
+    border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    background: var(--color-bg);
+}
+
+.rich-editor .ql-editor {
+    min-height: 180px;
+    color: var(--color-text);
+    line-height: 1.6;
+}
+
+.rich-editor .ql-editor.ql-blank::before {
+    color: var(--color-text-faint);
+    font-style: normal;
+}
+
+.rich-text {
+    line-height: 1.65;
+    overflow-wrap: anywhere;
+}
+
+.rich-text > :first-child {
+    margin-top: 0;
+}
+
+.rich-text > :last-child {
+    margin-bottom: 0;
+}
+
+.rich-text h2 {
+    font-size: 1.15rem;
+    margin: 1.25rem 0 0.5rem;
+}
+
+.rich-text h3 {
+    font-size: 1rem;
+    margin: 1rem 0 0.4rem;
+}
+
+.rich-text ul,
+.rich-text ol {
+    padding-left: 1.4rem;
+    margin: 0 0 1rem;
+}
+
+.rich-text li {
+    margin-bottom: 0.25rem;
+}
+
+.rich-text blockquote {
+    margin: 0 0 1rem;
+    padding: 0.4rem 0 0.4rem 1rem;
+    border-left: 3px solid var(--color-accent);
+    color: var(--color-text-muted);
+}
+
+.rich-text a {
+    color: var(--color-action);
+    text-decoration: underline;
+}

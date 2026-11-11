@@ -14,7 +14,8 @@
         "spatie/laravel-activitylog": "^4.12",
         "spatie/laravel-medialibrary": "^11.23",
         "spatie/laravel-permission": "^6.25",
-        "stripe/stripe-php": "^21.1"
+        "stripe/stripe-php": "^21.1",
+        "symfony/html-sanitizer": "^8.1"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

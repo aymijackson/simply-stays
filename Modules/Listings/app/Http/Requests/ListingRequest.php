@@ -16,7 +16,7 @@ class ListingRequest extends FormRequest
         return [
             'property_id' => ['required', 'integer', 'exists:properties,id'],
             'title' => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string', 'max:5000'],
+            'description' => ['nullable', 'string', 'max:20000'],
             'video_url' => ['nullable', 'url', 'max:500'],
             'price' => ['required', 'numeric', 'min:1'],
             'currency' => ['required', 'in:USD,NGN,GHS,KES,ZAR,GBP,EUR'],
