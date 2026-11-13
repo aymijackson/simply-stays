@@ -76,17 +76,25 @@ class InventorySnapshotSeeder extends Seeder
 
     private function resolveProperty(): Property
     {
-        $wanted = config('operations.snapshot_property');
+        // Read the variable directly too, so an inline value still works when the config is cached.
+        $wanted = trim((string) (config('operations.snapshot_property') ?? env('OPERATIONS_SNAPSHOT_PROPERTY', '')));
 
         $property = match (true) {
             is_numeric($wanted) => Property::find((int) $wanted),
-            filled($wanted) => Property::where('name', $wanted)->first(),
+            $wanted !== '' => Property::whereRaw('LOWER(name) = ?', [strtolower($wanted)])->first()
+                ?? Property::whereRaw('LOWER(name) LIKE ?', ['%'.strtolower($wanted).'%'])->orderBy('id')->first(),
             default => Property::orderBy('id')->first(),
         };
 
         if (! $property) {
-            throw new RuntimeException('No property to import the notebook inventory into. Create a property first, or set OPERATIONS_SNAPSHOT_PROPERTY.');
+            $available = Property::orderBy('id')->get(['id', 'name'])->map(fn ($p) => "{$p->id}: {$p->name}");
+
+            throw new RuntimeException($available->isEmpty()
+                ? 'This database has no properties yet. Create the property in the app first, then run this seeder again.'
+                : "No property matches \"{$wanted}\". Set OPERATIONS_SNAPSHOT_PROPERTY to one of these ids or names: ".$available->implode(', ').'.');
         }
+
+        $this->command?->info("Importing the notebook inventory into: {$property->name} (id {$property->id})");
 
         return $property;
     }
