@@ -3,8 +3,10 @@
 namespace Modules\Services\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Modules\Core\Enums\Currency;
 use Modules\Core\Support\Money;
@@ -15,11 +17,24 @@ use Modules\Services\Models\ServiceCategory;
 
 class ProviderServiceController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
-        $services = Service::with(['category', 'properties'])->where('provider_id', Auth::id())->latest()->get();
+        $isAdmin = Auth::user()->hasRole('Admin');
 
-        return view('services::provider.index', compact('services'));
+        // Providers manage their own services; admins oversee everyone's.
+        $services = Service::with(['category', 'properties', 'provider'])
+            ->when(! $isAdmin, fn ($q) => $q->where('provider_id', Auth::id()))
+            ->when($isAdmin && $request->filled('provider'), fn ($q) => $q->where('provider_id', $request->integer('provider')))
+            ->when($request->filled('status'), fn ($q) => $q->where('status', $request->input('status')))
+            ->when($request->filled('q'), fn ($q) => $q->where('title', 'like', '%'.$request->input('q').'%'))
+            ->latest()
+            ->get();
+
+        $providers = $isAdmin
+            ? User::whereIn('id', Service::select('provider_id'))->orderBy('name')->get(['id', 'name'])
+            : collect();
+
+        return view('services::provider.index', compact('services', 'isAdmin', 'providers'));
     }
 
     public function create(): View
@@ -34,7 +49,7 @@ class ProviderServiceController extends Controller
     {
         $validated = $request->validated();
 
-        $service = Service::create($this->payload($validated) + ['status' => 'draft']);
+        $service = Service::create($this->payload($validated) + ['provider_id' => Auth::id(), 'status' => 'draft']);
 
         $service->properties()->sync($validated['properties'] ?? []);
 
@@ -90,8 +105,9 @@ class ProviderServiceController extends Controller
     {
         $currency = Currency::from($validated['currency']);
 
+        // No provider_id here: updates must keep the service with its provider,
+        // even when an admin is the one saving it.
         $payload = [
-            'provider_id' => Auth::id(),
             'service_category_id' => $validated['service_category_id'],
             'title' => $validated['title'],
             'description' => $validated['description'] ?? null,

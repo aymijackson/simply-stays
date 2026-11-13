@@ -20,8 +20,8 @@ class ProviderOrderController extends Controller
 
     public function index(): View
     {
-        $orders = ServiceOrder::with(['service', 'customer'])
-            ->whereHas('service', fn ($query) => $query->where('provider_id', Auth::id()))
+        $orders = ServiceOrder::with(['service.provider', 'customer'])
+            ->when(! Auth::user()->hasRole('Admin'), fn ($query) => $query->whereHas('service', fn ($q) => $q->where('provider_id', Auth::id())))
             ->latest()
             ->get();
 

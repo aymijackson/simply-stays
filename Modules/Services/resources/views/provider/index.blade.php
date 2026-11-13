@@ -1,21 +1,50 @@
 @extends(auth()->user()->portalLayout())
 
-@section('title', 'My services')
+@section('title', $isAdmin ? 'All services' : 'My services')
 
 @section('content')
+@php $filtered = (bool) array_filter(request()->only(['q', 'status', 'provider'])); @endphp
 <div class="page page--tight">
     <div class="container">
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
-            <h1 style="margin: 0;">My services</h1>
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 1rem;">
+            <div>
+                <h1 style="margin: 0;">{{ $isAdmin ? 'All services' : 'My services' }}</h1>
+                @if ($isAdmin)<p class="text-muted" style="margin: 0.25rem 0 0;">Every provider's services, including the ones live on the website.</p>@endif
+            </div>
             <div style="display: flex; gap: 0.5rem;">
-                <a href="{{ route('provider.services.orders') }}" class="btn btn-outline">Incoming orders</a>
+                <a href="{{ route('provider.services.orders') }}" class="btn btn-outline">{{ $isAdmin ? 'All orders' : 'Incoming orders' }}</a>
                 <a href="{{ route('provider.services.create') }}" class="btn btn-primary">Add a service</a>
             </div>
         </div>
 
-        @if ($services->isEmpty())
+        <form method="GET" class="ops-filters" role="search">
+            <input type="search" name="q" value="{{ request('q') }}" class="form-control ops-filters__search" placeholder="Search services" aria-label="Search services">
+            @if ($isAdmin)
+                <select name="provider" class="form-control" aria-label="Provider" onchange="this.form.submit()">
+                    <option value="">All providers</option>
+                    @foreach ($providers as $provider)
+                        <option value="{{ $provider->id }}" @selected((int) request('provider') === $provider->id)>{{ $provider->name }}</option>
+                    @endforeach
+                </select>
+            @endif
+            <select name="status" class="form-control" aria-label="Status" onchange="this.form.submit()">
+                <option value="">Any status</option>
+                <option value="published" @selected(request('status') === 'published')>Published (live)</option>
+                <option value="draft" @selected(request('status') === 'draft')>Draft</option>
+            </select>
+            <button class="btn btn-primary">Search</button>
+            @if ($filtered)
+                <a href="{{ route('provider.services.index') }}" class="ops-filters__clear">Clear filters</a>
+            @endif
+        </form>
+
+        @if ($services->isEmpty() && $filtered)
             <div class="card text-center" style="padding: 3rem;">
-                <p style="margin-bottom: 1rem;">You haven't listed a service yet.</p>
+                <p style="margin: 0;">No services match these filters.</p>
+            </div>
+        @elseif ($services->isEmpty())
+            <div class="card text-center" style="padding: 3rem;">
+                <p style="margin-bottom: 1rem;">{{ $isAdmin ? 'No services have been listed yet.' : "You haven't listed a service yet." }}</p>
                 <a href="{{ route('provider.services.create') }}" class="btn btn-primary">Create your first service</a>
             </div>
         @else
@@ -32,6 +61,12 @@
                                 {{ $service->price()->format() }}
                                 &middot; {{ $service->properties->isEmpty() ? 'Available everywhere' : $service->properties->pluck('name')->join(', ') }}
                             </div>
+                            @if ($isAdmin)
+                                <div class="entity-card__meta">
+                                    Provider: <strong>{{ $service->provider?->name ?? 'Deleted account' }}</strong>
+                                    @if ($service->provider_id === auth()->id()) <span class="badge">You</span> @endif
+                                </div>
+                            @endif
 
                             <div style="display: flex; gap: 0.5rem; margin-top: 1rem; flex-wrap: wrap;">
                                 <a href="{{ route('provider.services.edit', $service) }}" class="btn btn-outline btn-sm">Edit</a>

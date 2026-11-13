@@ -13,9 +13,10 @@
 @section('content')
 <div class="page page--tight">
     <div class="container">
-        <a href="{{ route('provider.services.index') }}">&larr; Back to my services</a>
+        @php $isAdmin = auth()->user()->hasRole('Admin'); @endphp
+        <a href="{{ route('provider.services.index') }}">&larr; Back to {{ $isAdmin ? 'all services' : 'my services' }}</a>
 
-        <h1 style="margin-top: 1rem;">Incoming orders</h1>
+        <h1 style="margin-top: 1rem;">{{ $isAdmin ? 'All service orders' : 'Incoming orders' }}</h1>
 
         @if ($orders->isEmpty())
             <div class="card text-center" style="padding: 3rem;">
@@ -29,7 +30,10 @@
                             <span class="avatar">{{ strtoupper(substr($order->customer->name, 0, 1)) }}</span>
                             <div>
                                 <div class="entity-card__title" style="margin: 0;">{{ $order->service->title }}</div>
-                                <div class="entity-card__meta" style="margin: 0;">{{ $order->customer->name }}</div>
+                                <div class="entity-card__meta" style="margin: 0;">
+                                    {{ $order->customer->name }}
+                                    @if ($isAdmin && $order->service->provider) &middot; by {{ $order->service->provider->name }} @endif
+                                </div>
                             </div>
                         </div>
                         <x-status-badge :status="$order->status" />
