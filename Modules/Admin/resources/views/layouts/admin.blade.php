@@ -21,6 +21,7 @@
             'Marketplace' => [
                 ['label' => 'Properties', 'route' => 'host.properties.index', 'pattern' => 'host.properties.*', 'icon' => 'building'],
                 ['label' => 'Listings', 'route' => 'host.listings.index', 'pattern' => 'host.listings.*', 'icon' => 'door'],
+                ['label' => 'Vendors', 'route' => 'admin.vendors.index', 'pattern' => 'admin.vendors.*', 'icon' => 'briefcase'],
                 ['label' => 'Services', 'route' => 'provider.services.index', 'pattern' => 'provider.services.*', 'icon' => 'truck'],
             ],
             'Bookings' => [

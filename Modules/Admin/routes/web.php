@@ -9,6 +9,7 @@ use Modules\Admin\Http\Controllers\Web\AdminEventSettingController;
 use Modules\Admin\Http\Controllers\Web\AdminSiteSettingController;
 use Modules\Admin\Http\Controllers\Web\AdminSupportController;
 use Modules\Admin\Http\Controllers\Web\AdminUserController;
+use Modules\Admin\Http\Controllers\Web\AdminVendorController;
 
 Route::middleware(['auth', 'role:Admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('index');
@@ -16,6 +17,12 @@ Route::middleware(['auth', 'role:Admin'])->prefix('admin')->name('admin.')->grou
     Route::get('users', [AdminUserController::class, 'index'])->name('users.index');
     Route::patch('users/{user}/role', [AdminUserController::class, 'updateRole'])->name('users.role');
     Route::patch('users/{user}/status', [AdminUserController::class, 'updateStatus'])->name('users.status');
+
+    Route::get('vendors', [AdminVendorController::class, 'index'])->name('vendors.index');
+    Route::get('vendors/create', [AdminVendorController::class, 'create'])->name('vendors.create');
+    Route::post('vendors', [AdminVendorController::class, 'store'])->name('vendors.store');
+    Route::get('vendors/{vendor}/edit', [AdminVendorController::class, 'edit'])->name('vendors.edit');
+    Route::put('vendors/{vendor}', [AdminVendorController::class, 'update'])->name('vendors.update');
 
     Route::get('bookings', [AdminBookingController::class, 'index'])->name('bookings.index');
     Route::post('bookings/{booking}/refund', [AdminBookingController::class, 'refund'])->name('bookings.refund');

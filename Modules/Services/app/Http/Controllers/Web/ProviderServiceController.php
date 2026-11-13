@@ -8,12 +8,14 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 use Modules\Core\Enums\Currency;
 use Modules\Core\Support\Money;
 use Modules\Listings\Models\Property;
 use Modules\Services\Http\Requests\ServiceRequest;
 use Modules\Services\Models\Service;
 use Modules\Services\Models\ServiceCategory;
+use Spatie\Permission\Models\Role;
 
 class ProviderServiceController extends Controller
 {
@@ -37,23 +39,30 @@ class ProviderServiceController extends Controller
         return view('services::provider.index', compact('services', 'isAdmin', 'providers'));
     }
 
-    public function create(): View
+    public function create(Request $request): View
     {
         $categories = ServiceCategory::orderBy('name')->get();
         $properties = Property::orderBy('name')->get();
+        $vendors = $this->vendorOptions();
+        $selectedVendorId = $request->integer('provider') ?: null;
 
-        return view('services::provider.create', compact('categories', 'properties'));
+        return view('services::provider.create', compact('categories', 'properties', 'vendors', 'selectedVendorId'));
     }
 
     public function store(ServiceRequest $request): RedirectResponse
     {
         $validated = $request->validated();
 
-        $service = Service::create($this->payload($validated) + ['provider_id' => Auth::id(), 'status' => 'draft']);
+        $service = Service::create($this->payload($validated) + [
+            'provider_id' => $this->chosenProvider($validated) ?? Auth::id(),
+            'status' => 'draft',
+        ]);
 
         $service->properties()->sync($validated['properties'] ?? []);
 
-        return redirect()->route('provider.services.index')->with('status', 'Service created. Publish it when you\'re ready to take orders.');
+        $owner = $service->provider_id === Auth::id() ? '' : " for {$service->provider->name}";
+
+        return redirect()->route('provider.services.index')->with('status', "Service created{$owner}. Publish it when you're ready to take orders.");
     }
 
     public function edit(Service $service): View
@@ -63,8 +72,10 @@ class ProviderServiceController extends Controller
         $categories = ServiceCategory::orderBy('name')->get();
         $properties = Property::orderBy('name')->get();
         $selectedPropertyIds = $service->properties->pluck('id')->all();
+        $vendors = $this->vendorOptions();
+        $selectedVendorId = $service->provider_id;
 
-        return view('services::provider.edit', compact('service', 'categories', 'properties', 'selectedPropertyIds'));
+        return view('services::provider.edit', compact('service', 'categories', 'properties', 'selectedPropertyIds', 'vendors', 'selectedVendorId'));
     }
 
     public function update(ServiceRequest $request, Service $service): RedirectResponse
@@ -73,7 +84,8 @@ class ProviderServiceController extends Controller
 
         $validated = $request->validated();
 
-        $service->update($this->payload($validated));
+        // Only an admin can move a service to another vendor; everyone else keeps it as is.
+        $service->update($this->payload($validated) + array_filter(['provider_id' => $this->chosenProvider($validated, $service)]));
 
         $service->properties()->sync($validated['properties'] ?? []);
 
@@ -126,6 +138,38 @@ class ProviderServiceController extends Controller
         }
 
         return $payload;
+    }
+
+    /** Vendors an admin can assign a service to (empty for non-admins, who never see the picker). */
+    private function vendorOptions()
+    {
+        if (! Auth::user()->hasRole('Admin')) {
+            return collect();
+        }
+
+        Role::findOrCreate('ServiceProvider', 'web');
+
+        return User::role('ServiceProvider')->orderBy('name')->get(['id', 'name', 'email', 'status']);
+    }
+
+    /** The vendor an admin picked, validated to be a vendor or the admin themselves; null otherwise. */
+    private function chosenProvider(array $validated, ?Service $current = null): ?int
+    {
+        if (! Auth::user()->hasRole('Admin') || empty($validated['provider_id'])) {
+            return null;
+        }
+
+        $id = (int) $validated['provider_id'];
+        if ($current && $id === $current->provider_id) {
+            return null; // unchanged
+        }
+        $user = User::findOrFail($id);
+
+        if ($id !== Auth::id() && ! $user->hasRole('ServiceProvider')) {
+            throw ValidationException::withMessages(['provider_id' => 'Pick a registered vendor.']);
+        }
+
+        return $id;
     }
 
     private function authorizeOwner(Service $service): void
