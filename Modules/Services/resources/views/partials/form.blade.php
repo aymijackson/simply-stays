@@ -93,9 +93,23 @@
 </div>
 
 <div class="form-row">
-    <x-input name="delivery_fee" type="number" step="0.01" label="Delivery fee" hint="0 = free delivery." value="{{ old('delivery_fee', $service?->delivery_fee_amount ? $service->price()->toDecimal() : 0) }}" />
-    <x-input name="free_delivery_over" type="number" step="0.01" label="Free delivery over" hint="Optional spend threshold." value="{{ old('free_delivery_over', $service?->free_delivery_over_amount) }}" />
+    {{-- Stored in minor units; shown in major units. --}}
+    <x-input name="delivery_fee" type="number" step="0.01" label="Delivery fee" hint="0 = free delivery." value="{{ old('delivery_fee', $service?->delivery_fee_amount ? $service->delivery_fee_amount / 100 : 0) }}" />
+    <x-input name="free_delivery_over" type="number" step="0.01" label="Free delivery over" hint="Optional spend threshold." value="{{ old('free_delivery_over', $service?->free_delivery_over_amount !== null ? $service->free_delivery_over_amount / 100 : null) }}" />
 </div>
+
+<fieldset class="ops-fieldset" style="margin-bottom: 1rem;">
+    <legend>Charges added to the bill</legend>
+    <p class="form-hint" style="margin-top: 0;">Percentages of the order subtotal. Leave service charge or VAT blank to use the property's rates when the order is for a room or stay.</p>
+    <div class="form-row">
+        <x-input name="service_charge_percent" type="number" step="0.01" min="0" max="100" label="Service charge %" placeholder="Property rate" value="{{ old('service_charge_percent', $service?->service_charge_percent) }}" />
+        <x-input name="tax_percent" type="number" step="0.01" min="0" max="100" label="VAT / tax %" placeholder="Property rate" value="{{ old('tax_percent', $service?->tax_percent) }}" />
+    </div>
+    <div class="form-row">
+        <x-input name="other_charge_label" label="Other charge (name)" placeholder="e.g. Consumption tax" maxlength="60" value="{{ old('other_charge_label', $service?->other_charge_label) }}" />
+        <x-input name="other_charge_percent" type="number" step="0.01" min="0" max="100" label="Other charge %" placeholder="None" value="{{ old('other_charge_percent', $service?->other_charge_percent) }}" />
+    </div>
+</fieldset>
 
 @if (auth()->user()->hasRole('Admin'))
     <div class="form-row">
@@ -116,5 +130,20 @@
         <a href="{{ route('provider.services.menu-items.index', $service) }}" class="btn btn-outline btn-block">
             <x-icon name="utensils" style="width:16px;height:16px;" /> Manage menu
         </a>
+    </div>
+@endif
+
+@if ($service && $service->isLaundry())
+    <div class="form-group">
+        <a href="{{ route('provider.services.price-list.edit', $service) }}" class="btn btn-outline btn-block">
+            <x-icon name="washing-machine" style="width:16px;height:16px;" /> Price list (items &amp; treatments)
+        </a>
+        <p class="form-hint">With a price list, customers pick items and treatments and pay the total. Without one, they pay the flat price above.</p>
+    </div>
+@endif
+
+@if ($service)
+    <div class="form-group">
+        <a href="{{ route('provider.services.qr', $service) }}" class="btn btn-outline btn-block">QR codes for ordering</a>
     </div>
 @endif

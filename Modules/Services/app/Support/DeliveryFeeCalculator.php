@@ -21,7 +21,8 @@ final class DeliveryFeeCalculator
             }
         }
 
-        return $service->delivery_fee_amount;
+        // The column defaults to 0, but a model created in this request hasn't read that default back.
+        return (int) $service->delivery_fee_amount;
     }
 
     private static function isWithinWindow(array $window, Carbon $now): bool

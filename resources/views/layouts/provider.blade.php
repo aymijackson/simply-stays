@@ -33,6 +33,7 @@
 
     @include('layouts.partials.portal-shell')
     @include('layouts.partials.support-widget')
+    @include('layouts.partials.order-alerts')
 
     <script src="{{ asset('vendor/jquery.min.js') }}"></script>
     <script src="{{ asset('vendor/axios.min.js') }}"></script>

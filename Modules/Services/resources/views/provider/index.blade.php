@@ -74,6 +74,10 @@
 
                             <div style="display: flex; gap: 0.5rem; margin-top: 1rem; flex-wrap: wrap;">
                                 <a href="{{ route('provider.services.edit', $service) }}" class="btn btn-outline btn-sm">Edit</a>
+                                @if ($service->isLaundry())
+                                    <a href="{{ route('provider.services.price-list.edit', $service) }}" class="btn btn-outline btn-sm">Price list</a>
+                                @endif
+                                <a href="{{ route('provider.services.qr', $service) }}" class="btn btn-outline btn-sm">QR codes</a>
                                 <form method="POST" action="{{ route('provider.services.publish', $service) }}">
                                     @csrf
                                     @method('PATCH')

@@ -34,48 +34,7 @@
                 <strong>{{ $handler->summary($order->fulfillment_details ?? []) }}</strong>
             </div>
 
-            @if ($order->items->isNotEmpty())
-                <div class="card" style="padding: 1rem; margin-bottom: 1rem;">
-                    @foreach ($order->items as $item)
-                        <div style="padding: 0.3rem 0;">
-                            <div style="display: flex; justify-content: space-between; font-size: 0.9rem;">
-                                <span>{{ $item->quantity }}&times; {{ $item->name }} @if ($item->is_complimentary) <span class="badge badge--gold">Complimentary</span> @endif</span>
-                                <span>{{ $item->lineTotal($order->currency)->format() }}</span>
-                            </div>
-                            @if ($item->options->isNotEmpty())
-                                <div style="margin-left: 1rem; margin-top: 0.2rem;">
-                                    @foreach ($item->options as $option)
-                                        <div style="display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--color-text-muted);">
-                                            <span>+ {{ $option->quantity > 1 ? $option->quantity.'x ' : '' }}{{ $option->name }}</span>
-                                            <span>{{ $option->price_delta_amount > 0 ? $option->lineTotal($order->currency)->format() : '' }}</span>
-                                        </div>
-                                    @endforeach
-                                </div>
-                            @endif
-                        </div>
-                    @endforeach
-                </div>
-            @endif
-
-            @if ($order->price_breakdown)
-                @php $currency = \Modules\Core\Enums\Currency::from($order->currency); @endphp
-                <div style="background: var(--color-bg-alt); border-radius: var(--radius-sm); padding: 0.9rem 1rem; margin-bottom: 1rem;">
-                    <div style="display: flex; justify-content: space-between; font-size: 0.88rem;"><span>Subtotal</span><span>{{ \Modules\Core\Support\Money::fromMinorUnits($order->price_breakdown['subtotal'], $currency)->format() }}</span></div>
-                    @if (($order->price_breakdown['service_charge'] ?? 0) > 0)
-                        <div style="display: flex; justify-content: space-between; font-size: 0.88rem;"><span>Service charge</span><span>{{ \Modules\Core\Support\Money::fromMinorUnits($order->price_breakdown['service_charge'], $currency)->format() }}</span></div>
-                    @endif
-                    @if (($order->price_breakdown['tax'] ?? 0) > 0)
-                        <div style="display: flex; justify-content: space-between; font-size: 0.88rem;"><span>Tax</span><span>{{ \Modules\Core\Support\Money::fromMinorUnits($order->price_breakdown['tax'], $currency)->format() }}</span></div>
-                    @endif
-                    @if (($order->price_breakdown['delivery_fee'] ?? 0) > 0)
-                        <div style="display: flex; justify-content: space-between; font-size: 0.88rem;"><span>Delivery fee</span><span>{{ \Modules\Core\Support\Money::fromMinorUnits($order->price_breakdown['delivery_fee'], $currency)->format() }}</span></div>
-                    @elseif (isset($order->price_breakdown['delivery_fee']))
-                        <div style="display: flex; justify-content: space-between; font-size: 0.88rem; color: var(--color-success);"><span>Delivery</span><span>Free</span></div>
-                    @endif
-                </div>
-            @endif
-
-            <p style="font-size: 1.15rem;"><strong style="color: var(--color-navy-950);">Total: {{ $order->total()->format() }}</strong></p>
+            @include('services::partials.receipt', ['order' => $order])
 
             <div style="display: flex; gap: 0.5rem; margin-top: 1.5rem; flex-wrap: wrap;">
                 @if (! $order->isPaid() && $order->customer_id === auth()->id() && in_array($order->status, ['pending', 'confirmed']))

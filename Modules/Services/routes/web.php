@@ -5,7 +5,10 @@ use Modules\Services\Http\Controllers\Web\ProviderMenuItemController;
 use Modules\Services\Http\Controllers\Web\ProviderMenuItemOptionController;
 use Modules\Services\Http\Controllers\Web\ProviderMenuItemPairingController;
 use Modules\Services\Http\Controllers\Web\ProviderOrderController;
+use Modules\Services\Http\Controllers\Web\ProviderPriceListController;
+use Modules\Services\Http\Controllers\Web\ProviderQrController;
 use Modules\Services\Http\Controllers\Web\ProviderServiceController;
+use Modules\Services\Http\Controllers\Web\QrOrderController;
 use Modules\Services\Http\Controllers\Web\ServiceOrderController;
 use Modules\Services\Http\Controllers\Web\ServicesController;
 
@@ -14,6 +17,12 @@ Route::prefix('services')->name('services.')->group(function () {
     Route::get('{service}/menu/{menuItem}', [ServicesController::class, 'menuItem'])->name('menu-item');
     Route::get('{service}', [ServicesController::class, 'show'])->name('show');
 });
+
+// Ordering from a scanned QR code: no account needed. Placing orders is rate limited.
+Route::get('order/{token}', [QrOrderController::class, 'show'])->name('qr.order');
+Route::post('order/{token}', [QrOrderController::class, 'store'])->middleware('throttle:8,1')->name('qr.order.store');
+Route::get('track/{token}', [QrOrderController::class, 'track'])->name('qr.track');
+Route::get('track/{token}/status', [QrOrderController::class, 'status'])->middleware('throttle:60,1')->name('qr.track.status');
 
 Route::middleware('auth')->prefix('service-orders')->name('service-orders.')->group(function () {
     Route::get('/', [ServiceOrderController::class, 'index'])->name('index');
@@ -35,6 +44,17 @@ Route::middleware(['auth', 'role:ServiceProvider,Admin'])->prefix('provider/serv
     Route::delete('{service}', [ProviderServiceController::class, 'destroy'])->name('destroy');
     Route::patch('{service}/publish', [ProviderServiceController::class, 'publish'])->name('publish');
     Route::get('orders', [ProviderOrderController::class, 'index'])->name('orders');
+
+    Route::get('orders/feed', [ProviderOrderController::class, 'feed'])->name('orders.feed');
+    Route::patch('orders/seen', [ProviderOrderController::class, 'markSeen'])->name('orders.seen');
+
+    Route::get('{service}/qr', [ProviderQrController::class, 'index'])->name('qr');
+    Route::get('{service}/qr/print', [ProviderQrController::class, 'print'])->name('qr.print');
+    Route::get('{service}/qr/{code}/download', [ProviderQrController::class, 'download'])->name('qr.download');
+    Route::patch('{service}/qr/{code}/toggle', [ProviderQrController::class, 'toggle'])->name('qr.toggle');
+
+    Route::get('{service}/price-list', [ProviderPriceListController::class, 'edit'])->name('price-list.edit');
+    Route::put('{service}/price-list', [ProviderPriceListController::class, 'update'])->name('price-list.update');
 
     Route::get('{service}/menu-items', [ProviderMenuItemController::class, 'index'])->name('menu-items.index');
     Route::post('{service}/menu-items', [ProviderMenuItemController::class, 'store'])->name('menu-items.store');

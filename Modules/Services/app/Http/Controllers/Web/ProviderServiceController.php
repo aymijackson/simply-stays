@@ -143,6 +143,11 @@ class ProviderServiceController extends Controller
                 : null,
         ];
 
+        foreach (['service_charge_percent', 'tax_percent', 'other_charge_percent'] as $rate) {
+            $payload[$rate] = ($validated[$rate] ?? '') === '' ? null : $validated[$rate];
+        }
+        $payload['other_charge_label'] = $payload['other_charge_percent'] !== null ? ($validated['other_charge_label'] ?? null) : null;
+
         if (Auth::user()->hasRole('Admin')) {
             $payload['commission_type'] = $validated['commission_type'] ?? 'none';
             $payload['commission_value'] = $validated['commission_value'] ?? null;
