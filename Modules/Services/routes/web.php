@@ -43,6 +43,8 @@ Route::middleware(['auth', 'role:ServiceProvider,Admin'])->prefix('provider/serv
     Route::put('{service}', [ProviderServiceController::class, 'update'])->name('update');
     Route::delete('{service}', [ProviderServiceController::class, 'destroy'])->name('destroy');
     Route::patch('{service}/publish', [ProviderServiceController::class, 'publish'])->name('publish');
+    Route::delete('{service}/photos/{media:uuid}', [ProviderServiceController::class, 'destroyPhoto'])->name('photos.destroy');
+    Route::patch('{service}/photos/{media:uuid}/cover', [ProviderServiceController::class, 'coverPhoto'])->name('photos.cover');
     Route::get('orders', [ProviderOrderController::class, 'index'])->name('orders');
 
     Route::get('orders/feed', [ProviderOrderController::class, 'feed'])->name('orders.feed');

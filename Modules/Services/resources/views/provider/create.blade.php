@@ -10,7 +10,7 @@
         <div class="card" style="max-width: 640px; margin: 1rem auto 0;">
             <h1>Add a service</h1>
 
-            <form method="POST" action="{{ route('provider.services.store') }}">
+            <form method="POST" action="{{ route('provider.services.store') }}" enctype="multipart/form-data">
                 @csrf
                 @include('services::partials.form', ['service' => null])
                 <button type="submit" class="btn btn-primary btn-block">Save service</button>

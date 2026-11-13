@@ -145,7 +145,7 @@
                     @foreach ($featuredServices as $service)
                         <a href="{{ route('services.show', $service) }}" class="entity-card">
                             <div class="entity-card__media">
-                                <x-photo :type="$service->category->fulfillment_type" :seed="$service->id" :alt="$service->title" />
+                                <x-photo :url="$service->coverPhotoUrl()" :type="$service->category->fulfillment_type" :seed="$service->id" :alt="$service->title" />
                                 <span class="entity-card__badge"><span class="badge badge--dark">{{ $service->category->name }}</span></span>
                             </div>
                             <div class="entity-card__body">

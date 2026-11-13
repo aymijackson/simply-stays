@@ -1131,8 +1131,9 @@ html {
 
 .gallery-grid {
     display: grid;
-    grid-template-columns: 1.4fr 1fr;
-    grid-template-rows: repeat(2, 1fr);
+    /* Main photo on the left over two rows, four tiles in a 2x2 block on the right. */
+    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-rows: repeat(2, minmax(0, 1fr));
     gap: 0.5rem;
     border-radius: var(--radius-lg);
     overflow: hidden;
@@ -1148,6 +1149,7 @@ html {
 .gallery-grid__cell,
 .gallery-grid__main {
     overflow: hidden;
+    min-height: 0;
     background: var(--color-bg-alt);
 }
 
@@ -3421,3 +3423,16 @@ td.is-picked .lp-qty { border-color: var(--color-action); font-weight: 700; }
 /* Room pill: calmer than the action tint */
 .qr-order__room { background: var(--color-bg-alt); border: 1px solid var(--color-border); color: var(--color-navy-900); padding: 0.35rem 0.75rem; font-size: 0.92rem; line-height: 1.35; }
 .qr-order__room svg { flex: 0 0 auto; color: var(--color-action); }
+
+/* Service photos (form) */
+.svc-photos { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0.75rem; margin-bottom: 0.75rem; }
+.svc-photo { position: relative; margin: 0; border: 1px solid var(--color-border); border-radius: var(--radius-sm); overflow: hidden; background: var(--color-bg); }
+.svc-photo.is-cover { border-color: var(--color-action); box-shadow: 0 0 0 1px var(--color-action); }
+.svc-photo img { display: block; width: 100%; height: 110px; object-fit: cover; }
+.svc-photo__tag { position: absolute; top: 6px; left: 6px; padding: 0.1rem 0.5rem; border-radius: var(--radius-pill); background: var(--color-action); color: #fff; font-size: 0.7rem; font-weight: 700; }
+.svc-photo figcaption { display: flex; justify-content: space-between; gap: 0.25rem; padding: 0.3rem; }
+.svc-photo figcaption .btn { padding: 0.25rem 0.5rem; font-size: 0.78rem; }
+.svc-photo__remove { margin-left: auto; color: var(--color-danger); }
+
+/* QR order page cover photo */
+.qr-order__cover { display: block; width: calc(100% + 3rem); max-width: none; height: 180px; margin: -1.5rem -1.5rem 1rem; object-fit: cover; border-radius: var(--radius) var(--radius) 0 0; }

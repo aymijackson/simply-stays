@@ -51,6 +51,32 @@
     @enderror
 </div>
 
+<div class="form-group">
+    <label class="form-label" for="photos">Photos</label>
+    @if ($service && $service->getMedia('photos')->isNotEmpty())
+        <div class="svc-photos">
+            @foreach ($service->getMedia('photos') as $media)
+                <figure class="svc-photo @if ($loop->first) is-cover @endif">
+                    <img src="{{ $media->getUrl() }}" alt="Photo {{ $loop->iteration }} of {{ $service->title }}">
+                    @if ($loop->first)
+                        <span class="svc-photo__tag">Cover</span>
+                    @endif
+                    <figcaption>
+                        @unless ($loop->first)
+                            <button type="submit" form="photo-cover-{{ $media->uuid }}" class="btn btn-ghost btn-sm">Make cover</button>
+                        @endunless
+                        <button type="submit" form="photo-delete-{{ $media->uuid }}" class="btn btn-ghost btn-sm svc-photo__remove">Remove</button>
+                    </figcaption>
+                </figure>
+            @endforeach
+        </div>
+    @endif
+    <input type="file" name="photos[]" id="photos" class="form-control" multiple accept="image/jpeg,image/png,image/webp">
+    <p class="form-hint">{{ $service && $service->getMedia('photos')->isNotEmpty() ? 'Add more photos.' : 'Add a few photos: the first is the cover shown on the website.' }} JPG, PNG or WebP, up to 5&nbsp;MB each.</p>
+    @error('photos')<p class="form-error">{{ $message }}</p>@enderror
+    @error('photos.*')<p class="form-error">{{ $message }}</p>@enderror
+</div>
+
 <div class="form-row">
     <x-input name="price" type="number" label="Price" required value="{{ old('price', $service?->price_amount ? $service->price()->toDecimal() : '') }}" />
     <div class="form-group">

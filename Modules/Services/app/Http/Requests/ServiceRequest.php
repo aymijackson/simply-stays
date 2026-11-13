@@ -25,6 +25,8 @@ class ServiceRequest extends FormRequest
             'properties.*' => ['integer', 'exists:properties,id'],
             'delivery_fee' => ['nullable', 'numeric', 'min:0'],
             'free_delivery_over' => ['nullable', 'numeric', 'min:0'],
+            'photos' => ['nullable', 'array', 'max:12'],
+            'photos.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
             'service_charge_percent' => ['nullable', 'numeric', 'min:0', 'max:100'],
             'tax_percent' => ['nullable', 'numeric', 'min:0', 'max:100'],
             'other_charge_label' => ['nullable', 'string', 'max:60', 'required_with:other_charge_percent'],

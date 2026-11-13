@@ -16,6 +16,7 @@ use Modules\Listings\Models\Property;
 use Modules\Services\Http\Requests\ServiceRequest;
 use Modules\Services\Models\Service;
 use Modules\Services\Models\ServiceCategory;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\Permission\Models\Role;
 
 class ProviderServiceController extends Controller
@@ -28,7 +29,7 @@ class ProviderServiceController extends Controller
         $provider = $request->input('provider');
         $inHouse = fn ($q) => $q->whereHas('provider', fn ($p) => $p->whereHas('roles', fn ($r) => $r->where('name', 'Admin')));
 
-        $services = Service::with(['category', 'properties', 'provider.roles'])
+        $services = Service::with(['category', 'properties', 'provider.roles', 'media'])
             ->when(! $isAdmin, fn ($q) => $q->where('provider_id', Auth::id()))
             ->when($isAdmin && $provider === 'in_house', $inHouse)
             ->when($isAdmin && $provider && $provider !== 'in_house', fn ($q) => $q->where('provider_id', RouteKey::id(User::class, $provider) ?? 0))
@@ -67,6 +68,7 @@ class ProviderServiceController extends Controller
         ]);
 
         $service->properties()->sync($validated['properties'] ?? []);
+        $this->storePhotos($request, $service);
 
         $owner = match (true) {
             $service->isInHouse() => ' as an in-house service',
@@ -100,8 +102,35 @@ class ProviderServiceController extends Controller
         $service->update($this->payload($validated) + array_filter(['provider_id' => $this->chosenProvider($validated, $service)]));
 
         $service->properties()->sync($validated['properties'] ?? []);
+        $this->storePhotos($request, $service);
 
         return redirect()->route('provider.services.edit', $service)->with('status', 'Service updated.');
+    }
+
+    public function destroyPhoto(Service $service, Media $media): RedirectResponse
+    {
+        $this->authorizeOwner($service);
+        $media->delete();
+
+        return redirect()->route('provider.services.edit', $service)->with('status', 'Photo removed.');
+    }
+
+    /** Move a photo to the front so it becomes the cover on cards and the service page. */
+    public function coverPhoto(Service $service, Media $media): RedirectResponse
+    {
+        $this->authorizeOwner($service);
+
+        $order = $service->getMedia('photos')->pluck('id')->reject(fn ($id) => $id === $media->id)->prepend($media->id)->all();
+        Media::setNewOrder($order);
+
+        return redirect()->route('provider.services.edit', $service)->with('status', 'Cover photo updated.');
+    }
+
+    private function storePhotos(ServiceRequest $request, Service $service): void
+    {
+        foreach ($request->file('photos', []) as $photo) {
+            $service->addMedia($photo)->toMediaCollection('photos');
+        }
     }
 
     public function destroy(Service $service): RedirectResponse

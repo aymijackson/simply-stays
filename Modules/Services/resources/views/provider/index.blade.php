@@ -53,7 +53,7 @@
                 @foreach ($services as $service)
                     <div class="card card--flush">
                         <div class="entity-card__media" style="aspect-ratio: 16/9;">
-                            <x-photo :type="$service->category->fulfillment_type ?? 'other'" :seed="$service->id" :alt="$service->title" />
+                            <x-photo :url="$service->coverPhotoUrl()" :type="$service->category->fulfillment_type ?? 'other'" :seed="$service->id" :alt="$service->title" />
                             <span class="entity-card__badge"><x-status-badge :status="$service->status" /></span>
                         </div>
                         <div style="padding: 1rem 1.1rem 1.2rem;">

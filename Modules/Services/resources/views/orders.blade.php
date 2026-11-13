@@ -17,7 +17,7 @@
                 @foreach ($orders as $order)
                     <a href="{{ route('service-orders.show', $order) }}" class="entity-card">
                         <div class="entity-card__media">
-                            <x-photo :type="$order->service->category->fulfillment_type ?? 'other'" :seed="$order->service_id" :alt="$order->service->title" />
+                            <x-photo :url="$order->service->coverPhotoUrl()" :type="$order->service->category->fulfillment_type ?? 'other'" :seed="$order->service_id" :alt="$order->service->title" />
                             <span class="entity-card__badge"><x-status-badge :status="$order->status" /></span>
                         </div>
                         <div class="entity-card__body">

@@ -15,7 +15,7 @@
 
             <div style="display: flex; gap: 1rem; align-items: center; margin-bottom: 1.5rem;">
                 <div style="width: 80px; height: 80px; border-radius: var(--radius-sm); overflow: hidden; flex-shrink: 0;">
-                    <x-photo :type="$order->service->category->fulfillment_type ?? 'other'" :seed="$order->service_id" :alt="$order->service->title" />
+                    <x-photo :url="$order->service->coverPhotoUrl()" :type="$order->service->category->fulfillment_type ?? 'other'" :seed="$order->service_id" :alt="$order->service->title" />
                 </div>
                 <div>
                     <h1 style="margin-bottom: 0.15rem;">{{ $order->service->title }}</h1>

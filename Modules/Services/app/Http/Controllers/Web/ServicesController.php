@@ -22,7 +22,7 @@ class ServicesController extends Controller
                 $q->whereHas('properties', fn ($pq) => $pq->where('properties.slug', $request->input('property')))
                     ->orWhereDoesntHave('properties');
             }))
-            ->with(['category', 'menuItems'])
+            ->with(['category', 'menuItems', 'media'])
             ->withAvg(['reviews as reviews_avg_rating' => fn ($query) => $query->published()], 'rating')
             ->withCount(['reviews as reviews_count' => fn ($query) => $query->published()])
             ->latest()
@@ -36,7 +36,7 @@ class ServicesController extends Controller
     {
         abort_unless($service->status === 'published', 404);
 
-        $service->load(['category', 'provider', 'menuItems', 'reviews' => fn ($query) => $query->published()->with('reviewer')->latest()]);
+        $service->load(['category', 'provider', 'menuItems', 'media', 'reviews' => fn ($query) => $query->published()->with('reviewer')->latest()]);
 
         return view('services::show', compact('service'));
     }

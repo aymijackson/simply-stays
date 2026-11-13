@@ -23,7 +23,7 @@ class HomeController extends Controller
 
         $featuredServices = Service::query()
             ->where('status', 'published')
-            ->with('category')
+            ->with(['category', 'media'])
             ->withAvg(['reviews as reviews_avg_rating' => fn ($query) => $query->published()], 'rating')
             ->withCount(['reviews as reviews_count' => fn ($query) => $query->published()])
             ->latest()

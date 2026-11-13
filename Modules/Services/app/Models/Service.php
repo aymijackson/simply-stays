@@ -8,15 +8,18 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Support\Collection;
 use Modules\Core\Enums\Currency;
 use Modules\Core\Support\Money;
 use Modules\Core\Traits\Sluggable;
 use Modules\Listings\Models\Property;
 use Modules\Reviews\Models\Review;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Service extends Model
+class Service extends Model implements HasMedia
 {
-    use Sluggable;
+    use InteractsWithMedia, Sluggable;
 
     /** URLs use the slug (from the title), never the database id. */
     public function getRouteKeyName(): string
@@ -49,6 +52,23 @@ class Service extends Model
         return [
             'free_delivery_windows' => 'array',
         ];
+    }
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('photos');
+    }
+
+    /** First photo is the cover shown on cards; null means show placeholder art. */
+    public function coverPhotoUrl(): ?string
+    {
+        return $this->getFirstMediaUrl('photos') ?: null;
+    }
+
+    /** @return Collection<int, string> */
+    public function photoUrls(): Collection
+    {
+        return $this->getMedia('photos')->map(fn ($media) => $media->getUrl());
     }
 
     /**

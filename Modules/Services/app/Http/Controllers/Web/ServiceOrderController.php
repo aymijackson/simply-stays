@@ -120,7 +120,7 @@ class ServiceOrderController extends Controller
 
     public function index(): View
     {
-        $orders = ServiceOrder::with('service.category')
+        $orders = ServiceOrder::with(['service.category', 'service.media'])
             ->where('customer_id', Auth::id())
             ->latest()
             ->get();

@@ -7,12 +7,9 @@
     <div class="container">
         <a href="{{ route('services.index') }}">&larr; Back to services</a>
 
-        <div class="gallery-grid" style="height: 280px; margin-top: 1rem;">
-            <div class="gallery-grid__main">
-                <x-photo :type="$service->category->fulfillment_type" :seed="$service->id" :alt="$service->title" />
-            </div>
-            <div class="gallery-grid__cell"><x-photo :type="$service->category->fulfillment_type" :seed="$service->id + 1" :alt="$service->title" /></div>
-            <div class="gallery-grid__cell"><x-photo :type="$service->category->fulfillment_type" :seed="$service->id + 2" :alt="$service->title" /></div>
+        {{-- Real photos with a full-screen viewer; placeholder art until photos are uploaded. --}}
+        <div style="margin-top: 1rem;">
+            <x-gallery :images="$service->photoUrls()" :alt="$service->title" />
         </div>
 
         <span class="badge" style="margin-bottom: 0.5rem; display: inline-block;">{{ $service->category->name }}</span>

@@ -11,6 +11,9 @@
 <div class="page page--tight">
     <div class="container qr-order">
         <div class="card qr-order__card">
+            @if ($service->coverPhotoUrl())
+                <img src="{{ $service->coverPhotoUrl() }}" alt="{{ $service->title }}" class="qr-order__cover">
+            @endif
             <p class="qr-order__eyebrow">{{ $room ? $room->property->name : 'Order' }}</p>
             <h1 class="qr-order__title">{{ $service->title }}</h1>
             @if ($room)
