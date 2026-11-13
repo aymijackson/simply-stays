@@ -32,7 +32,7 @@
                                 <div class="entity-card__title" style="margin: 0;">{{ $order->service->title }}</div>
                                 <div class="entity-card__meta" style="margin: 0;">
                                     {{ $order->customer->name }}
-                                    @if ($isAdmin && $order->service->provider) &middot; by {{ $order->service->provider->name }} @endif
+                                    @if ($isAdmin) &middot; {{ $order->service->isInHouse() ? 'In-house' : 'by '.$order->service->providerLabel() }} @endif
                                 </div>
                             </div>
                         </div>

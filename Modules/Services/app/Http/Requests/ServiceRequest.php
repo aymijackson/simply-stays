@@ -30,8 +30,8 @@ class ServiceRequest extends FormRequest
         if (Auth::user()?->hasRole('Admin')) {
             $rules['commission_type'] = ['nullable', 'in:none,fixed,percentage'];
             $rules['commission_value'] = ['nullable', 'numeric', 'min:0'];
-            // Admins can list a service for a vendor (checked to be a vendor in the controller).
-            $rules['provider_id'] = ['nullable', 'integer', 'exists:users,id'];
+            // Admins pick "in_house" or a vendor's id (checked to be a vendor in the controller).
+            $rules['provider_id'] = ['nullable', 'regex:/^(in_house|\d+)$/'];
         }
 
         return $rules;

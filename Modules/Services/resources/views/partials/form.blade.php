@@ -3,22 +3,26 @@
     $properties = $properties ?? collect();
     $selectedPropertyIds = $selectedPropertyIds ?? [];
     $vendors = $vendors ?? collect();
-    $selectedVendorId = (int) old('provider_id', $selectedVendorId ?? auth()->id());
+    $selectedVendorId = (string) old('provider_id', $selectedVendorId ?? 'in_house');
 @endphp
 
 @if (auth()->user()->hasRole('Admin'))
     <div class="form-group">
-        <label class="form-label" for="provider_id">Vendor</label>
+        <label class="form-label" for="provider_id">Provided by</label>
         <select name="provider_id" id="provider_id" class="form-control">
-            <option value="{{ auth()->id() }}" @selected($selectedVendorId === auth()->id())>None — the platform runs this service ({{ auth()->user()->name }})</option>
-            @foreach ($vendors as $vendor)
-                <option value="{{ $vendor->id }}" @selected($selectedVendorId === $vendor->id)>{{ $vendor->name }} — {{ $vendor->email }}@if ($vendor->status === 'suspended') (suspended)@endif</option>
-            @endforeach
-            @if ($service && $service->provider_id !== auth()->id() && ! $vendors->contains('id', $service->provider_id))
-                <option value="{{ $service->provider_id }}" selected>{{ $service->provider?->name ?? 'Current owner' }}</option>
+            <option value="in_house" @selected($selectedVendorId === 'in_house')>In-house — run by the property, no vendor</option>
+            @if ($vendors->isNotEmpty())
+                <optgroup label="Vendors">
+                    @foreach ($vendors as $vendor)
+                        <option value="{{ $vendor->id }}" @selected($selectedVendorId === (string) $vendor->id)>{{ $vendor->name }} — {{ $vendor->email }}@if ($vendor->status === 'suspended') (suspended)@endif</option>
+                    @endforeach
+                </optgroup>
+            @endif
+            @if ($service && ! $service->isInHouse() && ! $vendors->contains('id', $service->provider_id))
+                <option value="{{ $service->provider_id }}" selected>{{ $service->provider?->name ?? 'Current owner' }} (current)</option>
             @endif
         </select>
-        <p class="form-hint">The vendor sees and manages this service from their own login, and receives its earnings minus the platform commission. <a href="{{ route('admin.vendors.create') }}">Register a new vendor</a></p>
+        <p class="form-hint">In-house services are run by your own staff and held under an admin account. A vendor manages their service from their own login and receives its earnings minus the platform commission. <a href="{{ route('admin.vendors.create') }}">Register a new vendor</a></p>
         @error('provider_id')
             <p class="form-error">{{ $message }}</p>
         @enderror

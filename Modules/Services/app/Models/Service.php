@@ -43,6 +43,17 @@ class Service extends Model
         return $this->belongsTo(User::class, 'provider_id');
     }
 
+    /** Run by the property itself rather than a vendor: owned by an admin (platform) account. */
+    public function isInHouse(): bool
+    {
+        return (bool) $this->provider?->hasRole('Admin');
+    }
+
+    public function providerLabel(): string
+    {
+        return $this->isInHouse() ? 'In-house' : ($this->provider?->name ?? 'Deleted account');
+    }
+
     public function category(): BelongsTo
     {
         return $this->belongsTo(ServiceCategory::class, 'service_category_id');

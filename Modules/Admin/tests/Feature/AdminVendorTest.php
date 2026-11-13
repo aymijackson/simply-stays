@@ -134,6 +134,35 @@ class AdminVendorTest extends TestCase
         $this->assertSame($vendor->id, $service->fresh()->provider_id);
     }
 
+    public function test_in_house_services_stay_in_house_and_can_move_to_and_from_vendors(): void
+    {
+        $vendor = $this->vendor();
+        $secondAdmin = User::factory()->create();
+        $secondAdmin->assignRole('Admin');
+
+        // Created in-house (the default for admins).
+        $this->actingAs($this->admin)->post(route('provider.services.store'), $this->servicePayload(['provider_id' => 'in_house']))
+            ->assertSessionHasNoErrors();
+        $service = Service::sole();
+        $this->assertTrue($service->isInHouse());
+
+        $this->actingAs($this->admin)->get(route('provider.services.index', ['provider' => 'in_house']))
+            ->assertOk()->assertSee('Jollof Platter')->assertSee('In-house');
+
+        // Another admin saving it keeps it with the original owner.
+        $this->actingAs($secondAdmin)->put(route('provider.services.update', $service), $this->servicePayload(['provider_id' => 'in_house']))
+            ->assertSessionHasNoErrors();
+        $this->assertSame($this->admin->id, $service->fresh()->provider_id);
+
+        // Hand it to a vendor, then bring it back in-house.
+        $this->actingAs($secondAdmin)->put(route('provider.services.update', $service), $this->servicePayload(['provider_id' => (string) $vendor->id]));
+        $this->assertSame($vendor->id, $service->fresh()->provider_id);
+
+        $this->actingAs($secondAdmin)->put(route('provider.services.update', $service), $this->servicePayload(['provider_id' => 'in_house']));
+        $this->assertTrue($service->fresh()->isInHouse());
+        $this->assertSame($secondAdmin->id, $service->fresh()->provider_id);
+    }
+
     public function test_vendors_cannot_reassign_services(): void
     {
         $vendor = $this->vendor();

@@ -24,16 +24,23 @@ class ProviderServiceController extends Controller
         $isAdmin = Auth::user()->hasRole('Admin');
 
         // Providers manage their own services; admins oversee everyone's.
-        $services = Service::with(['category', 'properties', 'provider'])
+        $provider = $request->input('provider');
+        $inHouse = fn ($q) => $q->whereHas('provider', fn ($p) => $p->whereHas('roles', fn ($r) => $r->where('name', 'Admin')));
+
+        $services = Service::with(['category', 'properties', 'provider.roles'])
             ->when(! $isAdmin, fn ($q) => $q->where('provider_id', Auth::id()))
-            ->when($isAdmin && $request->filled('provider'), fn ($q) => $q->where('provider_id', $request->integer('provider')))
+            ->when($isAdmin && $provider === 'in_house', $inHouse)
+            ->when($isAdmin && is_numeric($provider), fn ($q) => $q->where('provider_id', (int) $provider))
             ->when($request->filled('status'), fn ($q) => $q->where('status', $request->input('status')))
             ->when($request->filled('q'), fn ($q) => $q->where('title', 'like', '%'.$request->input('q').'%'))
             ->latest()
             ->get();
 
+        // Vendors only; in-house services have their own filter option.
         $providers = $isAdmin
-            ? User::whereIn('id', Service::select('provider_id'))->orderBy('name')->get(['id', 'name'])
+            ? User::whereIn('id', Service::select('provider_id'))
+                ->whereDoesntHave('roles', fn ($r) => $r->where('name', 'Admin'))
+                ->orderBy('name')->get(['id', 'name'])
             : collect();
 
         return view('services::provider.index', compact('services', 'isAdmin', 'providers'));
@@ -44,7 +51,7 @@ class ProviderServiceController extends Controller
         $categories = ServiceCategory::orderBy('name')->get();
         $properties = Property::orderBy('name')->get();
         $vendors = $this->vendorOptions();
-        $selectedVendorId = $request->integer('provider') ?: null;
+        $selectedVendorId = $request->integer('provider') ?: 'in_house';
 
         return view('services::provider.create', compact('categories', 'properties', 'vendors', 'selectedVendorId'));
     }
@@ -60,7 +67,11 @@ class ProviderServiceController extends Controller
 
         $service->properties()->sync($validated['properties'] ?? []);
 
-        $owner = $service->provider_id === Auth::id() ? '' : " for {$service->provider->name}";
+        $owner = match (true) {
+            $service->isInHouse() => ' as an in-house service',
+            $service->provider_id === Auth::id() => '',
+            default => " for {$service->provider->name}",
+        };
 
         return redirect()->route('provider.services.index')->with('status', "Service created{$owner}. Publish it when you're ready to take orders.");
     }
@@ -73,7 +84,7 @@ class ProviderServiceController extends Controller
         $properties = Property::orderBy('name')->get();
         $selectedPropertyIds = $service->properties->pluck('id')->all();
         $vendors = $this->vendorOptions();
-        $selectedVendorId = $service->provider_id;
+        $selectedVendorId = $service->isInHouse() ? 'in_house' : $service->provider_id;
 
         return view('services::provider.edit', compact('service', 'categories', 'properties', 'selectedPropertyIds', 'vendors', 'selectedVendorId'));
     }
@@ -152,21 +163,30 @@ class ProviderServiceController extends Controller
         return User::role('ServiceProvider')->orderBy('name')->get(['id', 'name', 'email', 'status']);
     }
 
-    /** The vendor an admin picked, validated to be a vendor or the admin themselves; null otherwise. */
+    /**
+     * The owner an admin picked: "in_house" (run by the property, owned by an admin account)
+     * or a registered vendor's id. Null means "leave as it is" / not an admin.
+     */
     private function chosenProvider(array $validated, ?Service $current = null): ?int
     {
-        if (! Auth::user()->hasRole('Admin') || empty($validated['provider_id'])) {
+        $choice = $validated['provider_id'] ?? null;
+
+        if (! Auth::user()->hasRole('Admin') || $choice === null || $choice === '') {
             return null;
         }
 
-        $id = (int) $validated['provider_id'];
-        if ($current && $id === $current->provider_id) {
-            return null; // unchanged
+        if ($choice === 'in_house') {
+            // Already in-house under another admin: keep it there rather than moving it to whoever saved.
+            return $current?->isInHouse() ? null : Auth::id();
         }
-        $user = User::findOrFail($id);
 
-        if ($id !== Auth::id() && ! $user->hasRole('ServiceProvider')) {
-            throw ValidationException::withMessages(['provider_id' => 'Pick a registered vendor.']);
+        $id = (int) $choice;
+        if ($current && $id === $current->provider_id) {
+            return null;
+        }
+
+        if (! User::find($id)?->hasRole('ServiceProvider')) {
+            throw ValidationException::withMessages(['provider_id' => 'Pick a registered vendor, or In-house.']);
         }
 
         return $id;

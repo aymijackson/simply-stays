@@ -22,6 +22,7 @@
             @if ($isAdmin)
                 <select name="provider" class="form-control" aria-label="Provider" onchange="this.form.submit()">
                     <option value="">All providers</option>
+                    <option value="in_house" @selected(request('provider') === 'in_house')>In-house only</option>
                     @foreach ($providers as $provider)
                         <option value="{{ $provider->id }}" @selected((int) request('provider') === $provider->id)>{{ $provider->name }}</option>
                     @endforeach
@@ -63,8 +64,11 @@
                             </div>
                             @if ($isAdmin)
                                 <div class="entity-card__meta">
-                                    Provider: <strong>{{ $service->provider?->name ?? 'Deleted account' }}</strong>
-                                    @if ($service->provider_id === auth()->id()) <span class="badge">You</span> @endif
+                                    @if ($service->isInHouse())
+                                        <span class="badge badge--gold">In-house</span>
+                                    @else
+                                        Vendor: <strong>{{ $service->provider?->name ?? 'Deleted account' }}</strong>
+                                    @endif
                                 </div>
                             @endif
 
