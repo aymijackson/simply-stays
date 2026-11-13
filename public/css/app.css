@@ -3436,3 +3436,56 @@ td.is-picked .lp-qty { border-color: var(--color-action); font-weight: 700; }
 
 /* QR order page cover photo */
 .qr-order__cover { display: block; width: calc(100% + 3rem); max-width: none; height: 180px; margin: -1.5rem -1.5rem 1rem; object-fit: cover; border-radius: var(--radius) var(--radius) 0 0; }
+
+/* ---------- Gallery: slideshow tile, hover zoom, richer viewer ---------- */
+
+.gallery-show { position: relative; }
+.gallery-show__slide { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: scale(1.04); transition: opacity 0.8s ease, transform 5s ease-out; }
+.gallery-show__slide.is-active { opacity: 1; transform: scale(1); }
+.gallery-show__open { position: absolute; inset: 0; z-index: 1; border: 0; background: transparent; cursor: zoom-in; }
+.gallery-show__arrow { position: absolute; top: 50%; z-index: 2; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; margin-top: -20px; border: 0; border-radius: 50%; background: rgba(255, 255, 255, 0.92); color: var(--color-navy-900); box-shadow: var(--shadow-sm); cursor: pointer; opacity: 0; transition: opacity 0.2s ease, transform 0.2s ease; }
+.gallery-show__arrow svg { width: 18px; height: 18px; }
+.gallery-show__arrow--prev { left: 12px; }
+.gallery-show__arrow--next { right: 12px; }
+.gallery-show__arrow:hover { transform: scale(1.08); }
+.gallery-show:hover .gallery-show__arrow, .gallery-show:focus-within .gallery-show__arrow { opacity: 1; }
+.gallery-show__dots { position: absolute; left: 50%; bottom: 14px; z-index: 2; display: flex; gap: 6px; transform: translateX(-50%); padding: 5px 8px; border-radius: var(--radius-pill); background: rgba(7, 26, 48, 0.35); }
+.gallery-show__dots button { width: 8px; height: 8px; padding: 0; border: 0; border-radius: 50%; background: rgba(255, 255, 255, 0.55); cursor: pointer; transition: width 0.25s ease, background 0.25s ease; }
+.gallery-show__dots button.is-active { width: 20px; border-radius: 4px; background: #fff; }
+.gallery-show .gallery-grid__expand { z-index: 2; pointer-events: none; }
+@media (hover: none) { .gallery-show__arrow { opacity: 0.85; } }
+
+.gallery-grid__cell img { transition: transform 0.45s ease; }
+.gallery-grid__cell:hover img, .gallery-grid__cell:focus-visible img { transform: scale(1.06); }
+.gallery-grid__cell:focus-visible, .gallery-show__open:focus-visible { outline: 3px solid var(--color-action); outline-offset: -3px; }
+.gallery-grid__more { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(7, 26, 48, 0.55); color: #fff; font-size: 1.15rem; font-weight: 700; transition: background 0.2s ease; }
+.gallery-grid__cell:hover .gallery-grid__more { background: rgba(7, 26, 48, 0.4); }
+
+body.lightbox-open { overflow: hidden; }
+.lightbox { flex-direction: column; }
+.lightbox__bar { position: absolute; top: 18px; left: 20px; z-index: 2; display: flex; align-items: center; gap: 0.75rem; color: #fff; }
+.lightbox__count { font-size: 0.92rem; font-weight: 600; font-variant-numeric: tabular-nums; opacity: 0.9; }
+.lightbox__tool { padding: 0.4rem 0.85rem; border: 1px solid rgba(255, 255, 255, 0.4); border-radius: var(--radius-pill); background: rgba(255, 255, 255, 0.08); color: #fff; font: inherit; font-size: 0.82rem; font-weight: 600; cursor: pointer; }
+.lightbox__tool:hover, .lightbox__tool.is-on { background: rgba(255, 255, 255, 0.2); }
+.lightbox__img { animation: lightbox-in 0.3s ease; }
+@keyframes lightbox-in { from { opacity: 0; transform: scale(0.985); } }
+.lightbox__thumbs { position: absolute; left: 0; right: 0; bottom: 14px; display: flex; justify-content: safe center; gap: 8px; padding: 0 20px; overflow-x: auto; scrollbar-width: none; }
+.lightbox__thumb { flex: 0 0 auto; width: 72px; height: 52px; padding: 0; border: 2px solid transparent; border-radius: 8px; overflow: hidden; background: rgba(255, 255, 255, 0.1); color: #fff; opacity: 0.55; cursor: pointer; transition: opacity 0.2s ease, border-color 0.2s ease; }
+.lightbox__thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.lightbox__thumb:hover { opacity: 0.85; }
+.lightbox__thumb.is-active { opacity: 1; border-color: #fff; }
+.lightbox__thumb--video { font-size: 1.1rem; }
+.lightbox__stage { max-height: calc(100vh - 160px); }
+.lightbox__stage img { max-height: calc(100vh - 160px); }
+@media (max-width: 640px) {
+    .lightbox__thumb { width: 56px; height: 42px; }
+    .lightbox__bar { top: 14px; left: 14px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .gallery-show__slide, .gallery-grid__cell img, .lightbox__img { transition: none; animation: none; transform: none; }
+}
+
+/* Phones: the slideshow already cycles every photo, so the small tiles are hidden. */
+@media (max-width: 768px) {
+    .gallery-show ~ .gallery-grid__cell { display: none !important; }
+}

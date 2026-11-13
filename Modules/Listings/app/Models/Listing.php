@@ -16,6 +16,7 @@ use Modules\Bookings\Models\ComplimentaryRule;
 use Modules\Core\Enums\Currency;
 use Modules\Core\Support\Money;
 use Modules\Core\Support\RichText;
+use Modules\Core\Traits\DecodesPlainText;
 use Modules\Core\Traits\Sluggable;
 use Modules\Reviews\Models\Review;
 use Spatie\MediaLibrary\HasMedia;
@@ -24,7 +25,10 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class Listing extends Model implements HasMedia
 {
-    use InteractsWithMedia, Sluggable, SoftDeletes;
+    use DecodesPlainText, InteractsWithMedia, Sluggable, SoftDeletes;
+
+    /** Saved as plain text: stray HTML entities like &amp; are decoded. */
+    protected array $plainTextFields = ['title'];
 
     /** URLs use the slug, never the database id. */
     public function getRouteKeyName(): string

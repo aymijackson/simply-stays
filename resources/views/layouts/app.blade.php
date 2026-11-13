@@ -26,11 +26,18 @@
 
     @include('layouts.partials.footer')
 
-    <div id="lightbox-overlay" class="lightbox" style="display:none;">
+    <div id="lightbox-overlay" class="lightbox" style="display:none;" role="dialog" aria-modal="true" aria-label="Photo viewer">
+        <div class="lightbox__bar">
+            <span class="lightbox__count" data-lightbox-count aria-live="polite"></span>
+            <button type="button" class="lightbox__tool" data-lightbox-play aria-pressed="false">
+                <span data-lightbox-play-label>Play slideshow</span>
+            </button>
+        </div>
         <button type="button" class="lightbox__close" data-lightbox-close aria-label="Close"><x-icon name="x" /></button>
         <button type="button" class="lightbox__prev" data-lightbox-prev aria-label="Previous"><x-icon name="chevron-left" /></button>
         <div class="lightbox__stage" data-lightbox-stage></div>
         <button type="button" class="lightbox__next" data-lightbox-next aria-label="Next"><x-icon name="chevron-right" /></button>
+        <div class="lightbox__thumbs" data-lightbox-thumbs></div>
     </div>
 
     @include('layouts.partials.support-widget')

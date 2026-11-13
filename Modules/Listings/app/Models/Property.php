@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
+use Modules\Core\Traits\DecodesPlainText;
 use Modules\Core\Traits\Sluggable;
 use Modules\Services\Models\Service;
 use Spatie\MediaLibrary\HasMedia;
@@ -16,7 +17,10 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Property extends Model implements HasMedia
 {
-    use InteractsWithMedia, Sluggable, SoftDeletes;
+    use DecodesPlainText, InteractsWithMedia, Sluggable, SoftDeletes;
+
+    /** Saved as plain text: stray HTML entities like &amp; are decoded. */
+    protected array $plainTextFields = ['name'];
 
     /** URLs use the slug, never the database id. */
     public function getRouteKeyName(): string

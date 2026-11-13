@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Collection;
 use Modules\Core\Enums\Currency;
 use Modules\Core\Support\Money;
+use Modules\Core\Traits\DecodesPlainText;
 use Modules\Core\Traits\Sluggable;
 use Modules\Listings\Models\Property;
 use Modules\Reviews\Models\Review;
@@ -19,7 +20,10 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Service extends Model implements HasMedia
 {
-    use InteractsWithMedia, Sluggable;
+    use DecodesPlainText, InteractsWithMedia, Sluggable;
+
+    /** Saved as plain text: stray HTML entities like &amp; are decoded. */
+    protected array $plainTextFields = ['title'];
 
     /** URLs use the slug (from the title), never the database id. */
     public function getRouteKeyName(): string
