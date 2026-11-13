@@ -8,29 +8,34 @@
     <div class="container">
         @include('operations::partials.header', ['title' => 'Stock movements'])
 
-        <div class="ops-toolbar">
-            <form method="GET" class="gform-filters">
-                <input type="search" name="q" value="{{ request('q') }}" class="form-control" placeholder="Item name">
-                <select name="type" class="form-control">
-                    <option value="">All types</option>
-                    @foreach (InventoryMovement::TYPES as $key => [$label])
-                        <option value="{{ $key }}" @selected(request('type') === $key)>{{ $label }}</option>
-                    @endforeach
-                </select>
-                <select name="location" class="form-control">
-                    <option value="">Any location</option>
-                    @foreach ($locations as $loc)
-                        <option value="{{ $loc->id }}" @selected((int) request('location') === $loc->id)>{{ $loc->label() }}</option>
-                    @endforeach
-                </select>
-                <input type="date" name="from" value="{{ request('from') }}" class="form-control" aria-label="From">
-                <input type="date" name="to" value="{{ request('to') }}" class="form-control" aria-label="To">
-                <button class="btn btn-outline">Filter</button>
-            </form>
+        <div class="ops-toolbar ops-toolbar--end">
             <div class="ops-toolbar__actions">
                 <a href="{{ route('ops.inventory.movements.create') }}" class="btn btn-primary">Record movement</a>
             </div>
         </div>
+
+        <form method="GET" class="ops-filters" role="search">
+            <input type="search" name="q" value="{{ request('q') }}" class="form-control ops-filters__search" placeholder="Item name">
+            <select name="type" class="form-control">
+                <option value="">All types</option>
+                @foreach (InventoryMovement::TYPES as $key => [$label])
+                    <option value="{{ $key }}" @selected(request('type') === $key)>{{ $label }}</option>
+                @endforeach
+            </select>
+            <select name="location" class="form-control">
+                <option value="">Any location</option>
+                @foreach ($locations->groupBy(fn ($l) => $l->type === 'apartment' ? $l->name : 'Store & service areas') as $group => $groupLocations)
+                    <optgroup label="{{ $group }}">
+                        @foreach ($groupLocations as $loc)
+                            <option value="{{ $loc->id }}" @selected((int) request('location') === $loc->id)>{{ $loc->type === 'apartment' ? ($loc->area ?? $loc->name) : $loc->label() }}</option>
+                        @endforeach
+                    </optgroup>
+                @endforeach
+            </select>
+            <input type="date" name="from" value="{{ request('from') }}" class="form-control" aria-label="From">
+            <input type="date" name="to" value="{{ request('to') }}" class="form-control" aria-label="To">
+            <button class="btn btn-primary">Search</button>
+        </form>
 
         <div class="card ops-card">
             @php $lastDay = null; @endphp

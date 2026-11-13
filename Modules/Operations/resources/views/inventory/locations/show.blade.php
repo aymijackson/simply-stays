@@ -28,7 +28,7 @@
                     <strong>{{ $short->count() }} item(s) below par</strong>
                     <div class="form-hint" style="margin:0;">{{ $short->map(fn ($s) => $s->shortfall().' '.$s->item->name)->implode(', ') }}</div>
                 </div>
-                <form method="POST" action="{{ route('ops.inventory.locations.restock', $location) }}" class="gform-filters" style="margin:0;">
+                <form method="POST" action="{{ route('ops.inventory.locations.restock', $location) }}" class="ops-inline-form">
                     @csrf
                     <select name="store_id" class="form-control" aria-label="Take from">
                         @foreach ($stores as $store)<option value="{{ $store->id }}">From {{ $store->label() }}</option>@endforeach

@@ -10,12 +10,7 @@
         @include('operations::partials.header', ['title' => 'Accounting'])
         @include('operations::finance.partials.nav')
 
-        <div class="ops-toolbar">
-            <form method="GET" class="gform-filters">
-                <input type="date" name="from" value="{{ $from->toDateString() }}" class="form-control" aria-label="From">
-                <input type="date" name="to" value="{{ $to->toDateString() }}" class="form-control" aria-label="To">
-                <button class="btn btn-outline">Show</button>
-            </form>
+        <div class="ops-toolbar ops-toolbar--end">
             <div class="ops-toolbar__actions">
                 <a href="{{ route('ops.finance.report', ['from' => now()->startOfMonth()->toDateString(), 'to' => now()->endOfMonth()->toDateString()]) }}" class="btn btn-ghost btn-sm">This month</a>
                 <a href="{{ route('ops.finance.report', ['from' => now()->subMonthNoOverflow()->startOfMonth()->toDateString(), 'to' => now()->subMonthNoOverflow()->endOfMonth()->toDateString()]) }}" class="btn btn-ghost btn-sm">Last month</a>
@@ -23,6 +18,12 @@
                 <button type="button" class="btn btn-outline btn-sm" onclick="window.print()">Print</button>
             </div>
         </div>
+
+        <form method="GET" class="ops-filters" role="search">
+            <input type="date" name="from" value="{{ $from->toDateString() }}" class="form-control" aria-label="From">
+            <input type="date" name="to" value="{{ $to->toDateString() }}" class="form-control" aria-label="To">
+            <button class="btn btn-primary">Show</button>
+        </form>
 
         <div class="card ops-statement">
             <h2>Income and expenditure</h2>

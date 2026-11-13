@@ -8,13 +8,11 @@
     <div class="container">
         @include('operations::partials.header', ['title' => 'Attendance'])
 
-        <div class="ops-toolbar">
-            <form method="GET" class="gform-filters">
-                <input type="date" name="from" value="{{ $from->toDateString() }}" class="form-control" aria-label="From">
-                <input type="date" name="to" value="{{ $to->toDateString() }}" class="form-control" aria-label="To">
-                <button class="btn btn-outline">Show</button>
-            </form>
-        </div>
+        <form method="GET" class="ops-filters" role="search">
+            <input type="date" name="from" value="{{ $from->toDateString() }}" class="form-control" aria-label="From">
+            <input type="date" name="to" value="{{ $to->toDateString() }}" class="form-control" aria-label="To">
+            <button class="btn btn-primary">Show</button>
+        </form>
 
         <div class="card card--flush ops-table-wrap">
             <table class="data-table">

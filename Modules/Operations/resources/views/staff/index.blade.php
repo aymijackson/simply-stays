@@ -8,25 +8,26 @@
     <div class="container">
         @include('operations::partials.header', ['title' => 'Staff'])
 
-        <div class="ops-toolbar">
-            <form method="GET" class="gform-filters">
-                <input type="search" name="q" value="{{ request('q') }}" class="form-control" placeholder="Search name">
-                <select name="department" class="form-control">
-                    <option value="">All departments</option>
-                    @foreach (StaffMember::DEPARTMENTS as $dept)<option @selected(request('department') === $dept)>{{ $dept }}</option>@endforeach
-                </select>
-                <select name="status" class="form-control">
-                    <option value="active" @selected(request('status', 'active') === 'active')>Active</option>
-                    <option value="inactive" @selected(request('status') === 'inactive')>Inactive</option>
-                    <option value="all" @selected(request('status') === 'all')>Everyone</option>
-                </select>
-                <button class="btn btn-outline">Filter</button>
-            </form>
+        <div class="ops-toolbar ops-toolbar--end">
             <div class="ops-toolbar__actions">
                 <a href="{{ route('ops.shifts.attendance') }}" class="btn btn-outline">Attendance</a>
                 <a href="{{ route('ops.staff.create') }}" class="btn btn-primary">Register staff</a>
             </div>
         </div>
+
+        <form method="GET" class="ops-filters" role="search">
+            <input type="search" name="q" value="{{ request('q') }}" class="form-control ops-filters__search" placeholder="Search name">
+            <select name="department" class="form-control">
+                <option value="">All departments</option>
+                @foreach (StaffMember::DEPARTMENTS as $dept)<option @selected(request('department') === $dept)>{{ $dept }}</option>@endforeach
+            </select>
+            <select name="status" class="form-control">
+                <option value="active" @selected(request('status', 'active') === 'active')>Active</option>
+                <option value="inactive" @selected(request('status') === 'inactive')>Inactive</option>
+                <option value="all" @selected(request('status') === 'all')>Everyone</option>
+            </select>
+            <button class="btn btn-primary">Search</button>
+        </form>
 
         @if ($staff->isEmpty())
             <div class="card text-center" style="padding: 3rem;">

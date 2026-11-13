@@ -9,30 +9,31 @@
         @include('operations::partials.header', ['title' => 'Accounting'])
         @include('operations::finance.partials.nav')
 
-        <div class="ops-toolbar">
-            <form method="GET" class="gform-filters">
-                <input type="date" name="from" value="{{ $from->toDateString() }}" class="form-control" aria-label="From">
-                <input type="date" name="to" value="{{ $to->toDateString() }}" class="form-control" aria-label="To">
-                <select name="type" class="form-control">
-                    <option value="">Income &amp; expenses</option>
-                    <option value="income" @selected(request('type') === 'income')>Income only</option>
-                    <option value="expense" @selected(request('type') === 'expense')>Expenses only</option>
-                </select>
-                <select name="category" class="form-control">
-                    <option value="">All categories</option>
-                    @foreach ($categories as $category)
-                        <option value="{{ $category->id }}" @selected((int) request('category') === $category->id)>{{ ucfirst($category->type) }}: {{ $category->name }}</option>
-                    @endforeach
-                </select>
-                <input type="search" name="q" value="{{ request('q') }}" class="form-control" placeholder="Search">
-                <button class="btn btn-outline">Filter</button>
-            </form>
+        <div class="ops-toolbar ops-toolbar--end">
             <div class="ops-toolbar__actions">
                 <a href="{{ route('ops.finance.export', request()->query() + ['from' => $from->toDateString(), 'to' => $to->toDateString()]) }}" class="btn btn-ghost">Export CSV</a>
                 <a href="{{ route('ops.finance.create', ['type' => 'income']) }}" class="btn btn-outline">+ Income</a>
                 <a href="{{ route('ops.finance.create', ['type' => 'expense']) }}" class="btn btn-primary">+ Expense</a>
             </div>
         </div>
+
+        <form method="GET" class="ops-filters" role="search">
+            <input type="date" name="from" value="{{ $from->toDateString() }}" class="form-control" aria-label="From">
+            <input type="date" name="to" value="{{ $to->toDateString() }}" class="form-control" aria-label="To">
+            <select name="type" class="form-control">
+                <option value="">Income &amp; expenses</option>
+                <option value="income" @selected(request('type') === 'income')>Income only</option>
+                <option value="expense" @selected(request('type') === 'expense')>Expenses only</option>
+            </select>
+            <select name="category" class="form-control">
+                <option value="">All categories</option>
+                @foreach ($categories as $category)
+                    <option value="{{ $category->id }}" @selected((int) request('category') === $category->id)>{{ ucfirst($category->type) }}: {{ $category->name }}</option>
+                @endforeach
+            </select>
+            <input type="search" name="q" value="{{ request('q') }}" class="form-control ops-filters__search" placeholder="Search">
+            <button class="btn btn-primary">Search</button>
+        </form>
 
         @if ($pendingBookings)
             <div class="card ops-restock">

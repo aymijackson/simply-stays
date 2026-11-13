@@ -26,7 +26,7 @@
                             </span>
                         </div>
                     @endforeach
-                    <form method="POST" action="{{ route('ops.finance.categories.store') }}" class="gform-filters" style="margin-top:1rem;">
+                    <form method="POST" action="{{ route('ops.finance.categories.store') }}" class="ops-inline-form" style="margin-top:1rem;">
                         @csrf
                         <input type="hidden" name="type" value="{{ $type }}">
                         <input type="text" name="name" class="form-control" placeholder="New {{ $type }} category" required maxlength="80">
