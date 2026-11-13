@@ -10,7 +10,7 @@
         <div class="support-inbox">
             <div class="support-inbox__list">
                 @forelse ($conversations as $conversation)
-                    <a href="{{ route('admin.support.index', ['conversation' => $conversation->id]) }}"
+                    <a href="{{ route('admin.support.index', ['conversation' => $conversation]) }}"
                        class="support-inbox__item @if ($active && $active->id === $conversation->id) is-active @endif">
                         <span class="avatar" style="width:34px;height:34px;font-size:0.8rem;">{{ strtoupper(substr($conversation->displayName(), 0, 1)) }}</span>
                         <span class="support-inbox__item-body">

@@ -12,12 +12,17 @@ use Illuminate\Support\Str;
 use Modules\Bookings\Models\Booking;
 use Modules\Core\Enums\Currency;
 use Modules\Core\Support\Money;
+use Modules\Core\Traits\HasPublicId;
 use Modules\Operations\Models\InventoryLocation;
 use Modules\Payments\Contracts\Payable;
 use Modules\Payments\Models\PaymentTransaction;
 
 class ServiceOrder extends Model implements Payable
 {
+    use HasPublicId;
+
+    public const REFERENCE_PREFIX = 'SO';
+
     protected $fillable = [
         'service_id',
         'customer_id',
@@ -148,7 +153,7 @@ class ServiceOrder extends Model implements Payable
 
     public function paymentDescription(): string
     {
-        return 'Service order #'.$this->id.' - '.$this->service->title;
+        return 'Service order '.$this->referenceCode().' - '.$this->service->title;
     }
 
     public function paymentAmountMinorUnits(): int

@@ -5,10 +5,13 @@ namespace Modules\Operations\Models;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Modules\Core\Traits\HasPublicId;
 use Modules\Listings\Models\Property;
 
 class Shift extends Model
 {
+    use HasPublicId;
+
     protected $table = 'ops_shifts';
 
     public const STATUSES = ['scheduled', 'in_progress', 'completed', 'missed', 'cancelled'];

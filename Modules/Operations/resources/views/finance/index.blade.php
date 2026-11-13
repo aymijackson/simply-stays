@@ -28,7 +28,7 @@
             <select name="category" class="form-control">
                 <option value="">All categories</option>
                 @foreach ($categories as $category)
-                    <option value="{{ $category->id }}" @selected((int) request('category') === $category->id)>{{ ucfirst($category->type) }}: {{ $category->name }}</option>
+                    <option value="{{ $category->getRouteKey() }}" @selected(request('category') === $category->getRouteKey())>{{ ucfirst($category->type) }}: {{ $category->name }}</option>
                 @endforeach
             </select>
             <input type="search" name="q" value="{{ request('q') }}" class="form-control ops-filters__search" placeholder="Search">

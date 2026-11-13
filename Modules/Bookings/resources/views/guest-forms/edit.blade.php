@@ -5,7 +5,7 @@
 @section('content')
 <div class="page page--tight">
     <div class="container" style="max-width: 900px;">
-        <a href="{{ route('guest-forms.show', $registration) }}">&larr; Back to form {{ $registration->reference() }}</a>
+        <a href="{{ route('guest-forms.show', $registration) }}">&larr; Back to form {{ $registration->referenceCode() }}</a>
 
         <form method="POST" action="{{ route('guest-forms.update', $registration) }}" class="card gform" style="margin-top: 1rem;">
             @csrf

@@ -20,8 +20,9 @@
                 <div>
                     <h1 style="margin-bottom: 0.15rem;">{{ $order->service->title }}</h1>
                     <p style="margin: 0; display: flex; align-items: center; gap: 0.4rem;">
-                        <span class="avatar" style="width:22px;height:22px;font-size:0.7rem;">{{ strtoupper(substr($order->service->provider->name, 0, 1)) }}</span>
-                        {{ $order->service->provider->name }}
+                        @php $offeredBy = $order->service->offeredBy($order->location?->property ?? $order->booking?->listing?->property); @endphp
+                        <span class="avatar" style="width:22px;height:22px;font-size:0.7rem;">{{ strtoupper(mb_substr($offeredBy, 0, 1)) }}</span>
+                        {{ $offeredBy }}
                     </p>
                 </div>
             </div>

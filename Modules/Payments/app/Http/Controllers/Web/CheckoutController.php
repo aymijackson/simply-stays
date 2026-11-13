@@ -87,9 +87,9 @@ class CheckoutController extends Controller
         abort_unless($transaction->payer_id === Auth::id(), 403);
 
         $returnUrl = match (true) {
-            (bool) $transaction->booking_id => route('bookings.show', $transaction->booking_id),
-            (bool) $transaction->service_order_id => route('service-orders.show', $transaction->service_order_id),
-            default => route('event-bookings.show', $transaction->event_booking_id),
+            (bool) $transaction->booking_id => route('bookings.show', $transaction->booking),
+            (bool) $transaction->service_order_id => route('service-orders.show', $transaction->serviceOrder),
+            default => route('event-bookings.show', $transaction->eventBooking),
         };
 
         if ($request->boolean('cancelled')) {
@@ -111,9 +111,6 @@ class CheckoutController extends Controller
         return redirect($returnUrl)->with('status', $message);
     }
 
-    /**
-     * @param  Model&Payable  $payable
-     */
     private function initiate(Request $request, Model&Payable $payable, PaymentGatewayManager $gateways, array $linkColumns): RedirectResponse
     {
         $validated = $request->validate([
@@ -161,9 +158,6 @@ class CheckoutController extends Controller
         return redirect()->away($result->redirectUrl);
     }
 
-    /**
-     * @param  Model&Payable  $payable
-     */
     private function authorizePayer(Model&Payable $payable): void
     {
         abort_unless($payable->payerId() === Auth::id(), 403);

@@ -16,7 +16,7 @@
                 @unless ($member->isActive())<span class="badge badge--dark">Inactive</span>@endunless
             </div>
             <div class="ops-toolbar__actions">
-                <a href="{{ route('ops.shifts.create', ['staff' => $member->id]) }}" class="btn btn-outline">Schedule shift</a>
+                <a href="{{ route('ops.shifts.create', ['staff' => $member]) }}" class="btn btn-outline">Schedule shift</a>
                 <a href="{{ route('ops.staff.edit', $member) }}" class="btn btn-primary">Edit</a>
             </div>
         </div>

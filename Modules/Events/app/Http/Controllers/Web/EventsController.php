@@ -18,7 +18,7 @@ class EventsController extends Controller
             ->whereHas('event', function ($query) use ($request) {
                 $query->published()
                     ->when($request->filled('city'), fn ($q) => $q->whereHas('property', fn ($pq) => $pq->where('city', 'like', '%'.$request->string('city').'%')))
-                    ->when($request->filled('property'), fn ($q) => $q->where('property_id', $request->input('property')));
+                    ->when($request->filled('property'), fn ($q) => $q->whereHas('property', fn ($pq) => $pq->where('slug', $request->input('property'))));
             })
             ->with('event.property')
             ->orderBy('date')

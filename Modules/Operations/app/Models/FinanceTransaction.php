@@ -8,13 +8,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Modules\Bookings\Models\Booking;
 use Modules\Core\Enums\Currency;
 use Modules\Core\Support\Money;
+use Modules\Core\Traits\HasPublicId;
 use Modules\Listings\Models\Property;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
 class FinanceTransaction extends Model implements HasMedia
 {
-    use InteractsWithMedia;
+    use HasPublicId, InteractsWithMedia;
 
     protected $table = 'ops_finance_transactions';
 

@@ -3,15 +3,17 @@
 namespace Modules\Listings\Models;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Collection;
 use Modules\Bookings\Models\Booking;
 use Modules\Bookings\Models\ComplimentaryRule;
-use Illuminate\Database\Eloquent\Casts\Attribute;
+use Modules\Core\Enums\Currency;
 use Modules\Core\Support\Money;
 use Modules\Core\Support\RichText;
 use Modules\Core\Traits\Sluggable;
@@ -23,6 +25,12 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 class Listing extends Model implements HasMedia
 {
     use InteractsWithMedia, Sluggable, SoftDeletes;
+
+    /** URLs use the slug, never the database id. */
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
 
     protected $fillable = [
         'property_id',
@@ -44,7 +52,7 @@ class Listing extends Model implements HasMedia
         $this->addMediaCollection('videos');
     }
 
-    public function videoUrls(): \Illuminate\Support\Collection
+    public function videoUrls(): Collection
     {
         return $this->getMedia('videos')->map(fn ($media) => $media->getUrl());
     }
@@ -74,7 +82,7 @@ class Listing extends Model implements HasMedia
         return $query->where('status', 'published');
     }
 
-    public function photoUrls(): \Illuminate\Support\Collection
+    public function photoUrls(): Collection
     {
         return $this->getMedia('photos')->map(fn (Media $media) => $media->getUrl());
     }
@@ -88,7 +96,7 @@ class Listing extends Model implements HasMedia
     {
         return Money::fromMinorUnits(
             $this->base_price_amount,
-            \Modules\Core\Enums\Currency::from($this->currency)
+            Currency::from($this->currency)
         );
     }
 

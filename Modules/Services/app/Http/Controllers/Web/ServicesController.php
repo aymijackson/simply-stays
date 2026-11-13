@@ -17,9 +17,9 @@ class ServicesController extends Controller
 
         $services = Service::query()
             ->where('status', 'published')
-            ->when($request->filled('category'), fn ($query) => $query->where('service_category_id', $request->input('category')))
+            ->when($request->filled('category'), fn ($query) => $query->whereHas('category', fn ($c) => $c->where('slug', $request->input('category'))))
             ->when($request->filled('property'), fn ($query) => $query->where(function ($q) use ($request) {
-                $q->whereHas('properties', fn ($pq) => $pq->where('properties.id', $request->input('property')))
+                $q->whereHas('properties', fn ($pq) => $pq->where('properties.slug', $request->input('property')))
                     ->orWhereDoesntHave('properties');
             }))
             ->with(['category', 'menuItems'])

@@ -128,7 +128,7 @@
                                                 </{{ $canManage ? 'a' : 'div' }}>
                                             @endforeach
                                             @if ($canManage)
-                                                <a href="{{ route('ops.shifts.create', ['staff' => $member->id, 'date' => $day->toDateString()]) }}" class="ops-cell-add @if ($cell->isEmpty()) is-empty @endif" aria-label="Add shift for {{ $member->name }} on {{ $day->format('D j M') }}">+</a>
+                                                <a href="{{ route('ops.shifts.create', ['staff' => $member, 'date' => $day->toDateString()]) }}" class="ops-cell-add @if ($cell->isEmpty()) is-empty @endif" aria-label="Add shift for {{ $member->name }} on {{ $day->format('D j M') }}">+</a>
                                             @elseif ($cell->isEmpty())
                                                 <span class="ops-cell-off">Off</span>
                                             @endif

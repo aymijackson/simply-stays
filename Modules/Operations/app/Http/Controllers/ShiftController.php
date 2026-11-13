@@ -7,6 +7,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
+use Modules\Core\Support\RouteKey;
 use Modules\Listings\Models\Property;
 use Modules\Operations\Models\Shift;
 use Modules\Operations\Models\StaffMember;
@@ -90,7 +91,7 @@ class ShiftController extends OpsController
         return view('operations::shifts.form', [
             'property' => $property,
             'shift' => new Shift([
-                'staff_member_id' => $request->integer('staff') ?: null,
+                'staff_member_id' => RouteKey::id(StaffMember::class, $request->query('staff'), StaffMember::where('property_id', $property->id)),
                 'starts_at' => CarbonImmutable::parse($request->input('date', 'today'))->setTime(8, 0),
                 'ends_at' => CarbonImmutable::parse($request->input('date', 'today'))->setTime(16, 0),
             ]),

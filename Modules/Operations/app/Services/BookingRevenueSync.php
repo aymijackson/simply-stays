@@ -40,7 +40,7 @@ class BookingRevenueSync
                     'occurred_on' => $booking->check_in,
                     'payment_method' => 'card',
                     'counterparty' => $booking->guest?->name,
-                    'reference' => 'Booking #'.$booking->id,
+                    'reference' => 'Booking '.$booking->referenceCode(),
                     'description' => sprintf(
                         '%s, %s to %s (%d night%s)',
                         $booking->listing->title,

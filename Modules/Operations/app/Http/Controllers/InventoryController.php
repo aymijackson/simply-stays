@@ -5,6 +5,7 @@ namespace Modules\Operations\Http\Controllers;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Modules\Core\Support\RouteKey;
 use Modules\Operations\Models\InventoryItem;
 use Modules\Operations\Models\InventoryLocation;
 use Modules\Operations\Support\StockAlerts;
@@ -16,7 +17,7 @@ class InventoryController extends OpsController
     {
         $property = $this->property($request, 'inventory');
         $location = $request->filled('location')
-            ? InventoryLocation::where('property_id', $property->id)->find($request->integer('location'))
+            ? RouteKey::find(InventoryLocation::class, $request->query('location'), InventoryLocation::where('property_id', $property->id))
             : null;
 
         $query = InventoryItem::query()

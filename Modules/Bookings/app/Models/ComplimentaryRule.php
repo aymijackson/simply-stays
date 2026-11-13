@@ -5,12 +5,15 @@ namespace Modules\Bookings\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Modules\Core\Traits\HasPublicId;
 use Modules\Listings\Models\Listing;
 use Modules\Services\Models\MenuItem;
 use Modules\Services\Models\Service;
 
 class ComplimentaryRule extends Model
 {
+    use HasPublicId;
+
     protected $fillable = [
         'listing_id',
         'service_id',

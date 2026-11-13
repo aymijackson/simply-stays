@@ -8,11 +8,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Modules\Core\Enums\Currency;
 use Modules\Core\Support\Money;
+use Modules\Core\Traits\HasPublicId;
 use Modules\Payments\Contracts\Payable;
 use Modules\Payments\Models\PaymentTransaction;
 
 class EventBooking extends Model implements Payable
 {
+    use HasPublicId;
+
+    public const REFERENCE_PREFIX = 'EB';
+
     protected $fillable = [
         'event_occurrence_id',
         'guest_id',

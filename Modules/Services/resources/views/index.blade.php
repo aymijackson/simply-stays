@@ -20,9 +20,9 @@
                         'logistics' => 'truck',
                         default => 'sparkles',
                     };
-                    $isActive = (string) request('category') === (string) $category->id;
+                    $isActive = (string) request('category') === $category->slug;
                 @endphp
-                <a href="{{ route('services.index', ['category' => $category->id]) }}" class="tile" style="{{ $isActive ? 'border-color: var(--color-action); box-shadow: var(--shadow-sm);' : '' }}">
+                <a href="{{ route('services.index', ['category' => $category]) }}" class="tile" style="{{ $isActive ? 'border-color: var(--color-action); box-shadow: var(--shadow-sm);' : '' }}">
                     <span class="tile__icon"><x-icon :name="$tileIcon" /></span>
                     <span class="tile__label">{{ $category->name }}</span>
                 </a>

@@ -18,7 +18,7 @@ Route::middleware(['auth', 'role:Host,Admin'])->prefix('host/properties')->name(
     Route::get('{property}/edit', [HostPropertyController::class, 'edit'])->name('edit');
     Route::put('{property}', [HostPropertyController::class, 'update'])->name('update');
     Route::delete('{property}', [HostPropertyController::class, 'destroy'])->name('destroy');
-    Route::delete('{property}/photos/{media}', [HostPropertyController::class, 'destroyPhoto'])->name('photos.destroy');
+    Route::delete('{property}/photos/{media:uuid}', [HostPropertyController::class, 'destroyPhoto'])->name('photos.destroy');
 });
 
 Route::middleware(['auth', 'role:Host,Admin'])->prefix('host/listings')->name('host.listings.')->group(function () {
@@ -29,7 +29,7 @@ Route::middleware(['auth', 'role:Host,Admin'])->prefix('host/listings')->name('h
     Route::put('{listing}', [HostListingController::class, 'update'])->name('update');
     Route::delete('{listing}', [HostListingController::class, 'destroy'])->name('destroy');
     Route::patch('{listing}/publish', [HostListingController::class, 'publish'])->name('publish');
-    Route::delete('{listing}/photos/{media}', [HostListingController::class, 'destroyPhoto'])->name('photos.destroy');
+    Route::delete('{listing}/photos/{media:uuid}', [HostListingController::class, 'destroyPhoto'])->name('photos.destroy');
 
     Route::get('{listing}/complimentary', [HostComplimentaryRuleController::class, 'index'])->name('complimentary.index');
     Route::post('{listing}/complimentary', [HostComplimentaryRuleController::class, 'store'])->name('complimentary.store');

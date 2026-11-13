@@ -46,7 +46,7 @@
                             <span class="avatar">{{ strtoupper(substr($referral->referredUser->name ?? 'G', 0, 1)) }}</span>
                             <div>
                                 <div class="entity-card__title" style="margin: 0;">{{ $referral->referredUser->name ?? 'Guest' }}</div>
-                                <div class="entity-card__meta" style="margin: 0;">{{ class_basename($referral->referable_type) }} #{{ $referral->referable_id }}</div>
+                                <div class="entity-card__meta" style="margin: 0;">{{ class_basename($referral->referable_type) }} {{ $referral->referable?->referenceCode() }}</div>
                             </div>
                         </div>
                         <p style="font-weight: 800; color: var(--color-navy-950); margin-bottom: 0.5rem;">

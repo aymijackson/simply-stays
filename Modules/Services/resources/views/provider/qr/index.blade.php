@@ -54,7 +54,7 @@
                                     @php $code = $codes[$room->id] ?? null; @endphp
                                     <div class="qr-room">
                                         <label class="ops-check" style="margin: 0;">
-                                            <input type="checkbox" name="locations[]" value="{{ $room->id }}" checked data-qr-room>
+                                            <input type="checkbox" name="locations[]" value="{{ $room->getRouteKey() }}" checked data-qr-room>
                                             {{ $room->area ?? $room->name }}
                                         </label>
                                         <span class="form-hint" style="margin: 0;">

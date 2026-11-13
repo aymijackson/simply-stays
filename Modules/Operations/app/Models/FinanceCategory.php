@@ -6,10 +6,13 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Modules\Core\Traits\HasPublicId;
 use Modules\Listings\Models\Property;
 
 class FinanceCategory extends Model
 {
+    use HasPublicId;
+
     protected $table = 'ops_finance_categories';
 
     /** Seeded for every install; slugs let code find them (e.g. salaries, inventory purchases). */

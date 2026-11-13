@@ -8,12 +8,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Modules\Core\Enums\Currency;
 use Modules\Core\Support\Money;
+use Modules\Core\Traits\HasPublicId;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
 class MenuItem extends Model implements HasMedia
 {
-    use InteractsWithMedia;
+    use HasPublicId, InteractsWithMedia;
+
     protected $fillable = [
         'service_id',
         'name',

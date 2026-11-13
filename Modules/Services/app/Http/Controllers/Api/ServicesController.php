@@ -13,7 +13,7 @@ class ServicesController extends Controller
     {
         $services = Service::query()
             ->where('status', 'published')
-            ->when($request->filled('category'), fn ($query) => $query->where('service_category_id', $request->input('category')))
+            ->when($request->filled('category'), fn ($query) => $query->whereHas('category', fn ($c) => $c->where('slug', $request->input('category'))))
             ->with('category')
             ->latest()
             ->paginate(12);
@@ -42,7 +42,7 @@ class ServicesController extends Controller
             'fulfillment_type' => $service->category->fulfillment_type,
             'price' => $service->price()->toDecimal(),
             'currency' => $service->currency,
-            'provider' => ['name' => $service->provider->name],
+            'provider' => ['name' => $service->offeredBy()],
         ]);
     }
 }

@@ -22,8 +22,8 @@ class AdminSupportController extends Controller
             ->orderByDesc('created_at')
             ->get();
 
-        $activeId = (int) $request->query('conversation', $conversations->first()?->id);
-        $active = $conversations->firstWhere('id', $activeId);
+        $wanted = $request->query('conversation');
+        $active = $wanted ? $conversations->firstWhere('public_id', $wanted) : $conversations->first();
 
         if ($active) {
             $active->messages()

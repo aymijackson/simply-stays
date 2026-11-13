@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Modules\Core\Enums\Currency;
 use Modules\Core\Support\Money;
+use Modules\Core\Support\RouteKey;
 use Modules\Listings\Models\Property;
 use Modules\Services\Http\Requests\ServiceRequest;
 use Modules\Services\Models\Service;
@@ -30,7 +31,7 @@ class ProviderServiceController extends Controller
         $services = Service::with(['category', 'properties', 'provider.roles'])
             ->when(! $isAdmin, fn ($q) => $q->where('provider_id', Auth::id()))
             ->when($isAdmin && $provider === 'in_house', $inHouse)
-            ->when($isAdmin && is_numeric($provider), fn ($q) => $q->where('provider_id', (int) $provider))
+            ->when($isAdmin && $provider && $provider !== 'in_house', fn ($q) => $q->where('provider_id', RouteKey::id(User::class, $provider) ?? 0))
             ->when($request->filled('status'), fn ($q) => $q->where('status', $request->input('status')))
             ->when($request->filled('q'), fn ($q) => $q->where('title', 'like', '%'.$request->input('q').'%'))
             ->latest()
@@ -51,7 +52,7 @@ class ProviderServiceController extends Controller
         $categories = ServiceCategory::orderBy('name')->get();
         $properties = Property::orderBy('name')->get();
         $vendors = $this->vendorOptions();
-        $selectedVendorId = $request->integer('provider') ?: 'in_house';
+        $selectedVendorId = RouteKey::id(User::class, $request->query('provider')) ?? 'in_house';
 
         return view('services::provider.create', compact('categories', 'properties', 'vendors', 'selectedVendorId'));
     }

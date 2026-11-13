@@ -25,7 +25,7 @@ class NewServiceOrder extends Notification implements ShouldQueue
         $order = $this->order->loadMissing(['service', 'items']);
 
         $mail = (new MailMessage)
-            ->subject("New order #{$order->id}: {$order->service->title}".($order->location_label ? " — {$order->location_label}" : ''))
+            ->subject("New order {$order->referenceCode()}: {$order->service->title}".($order->location_label ? " — {$order->location_label}" : ''))
             ->greeting('New order')
             ->line("From: {$order->contactName()}".($order->contactPhone() ? ", {$order->contactPhone()}" : ''));
 

@@ -16,8 +16,8 @@
                 &middot; {{ $stocks->where('quantity', '>', 0)->count() }} items, {{ $stocks->sum('quantity') }} pieces
             </div>
             <div class="ops-toolbar__actions">
-                <a href="{{ route('ops.inventory.movements.create', ['type' => 'transfer', 'to' => $location->id]) }}" class="btn btn-outline">Bring items here</a>
-                <a href="{{ route('ops.inventory.movements.create', ['type' => 'consume', 'from' => $location->id]) }}" class="btn btn-outline">Record usage</a>
+                <a href="{{ route('ops.inventory.movements.create', ['type' => 'transfer', 'to' => $location]) }}" class="btn btn-outline">Bring items here</a>
+                <a href="{{ route('ops.inventory.movements.create', ['type' => 'consume', 'from' => $location]) }}" class="btn btn-outline">Record usage</a>
                 @if ($canManage)<a href="{{ route('ops.inventory.locations.edit', $location) }}" class="btn btn-ghost">Edit</a>@endif
             </div>
         </div>

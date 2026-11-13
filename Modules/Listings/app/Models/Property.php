@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Collection;
 use Modules\Core\Traits\Sluggable;
 use Modules\Services\Models\Service;
 use Spatie\MediaLibrary\HasMedia;
@@ -16,6 +17,12 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 class Property extends Model implements HasMedia
 {
     use InteractsWithMedia, Sluggable, SoftDeletes;
+
+    /** URLs use the slug, never the database id. */
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
 
     protected $fillable = [
         'host_id',
@@ -42,7 +49,7 @@ class Property extends Model implements HasMedia
         $this->addMediaCollection('photos');
     }
 
-    public function photoUrls(): \Illuminate\Support\Collection
+    public function photoUrls(): Collection
     {
         return $this->getMedia('photos')->map(fn ($media) => $media->getUrl());
     }

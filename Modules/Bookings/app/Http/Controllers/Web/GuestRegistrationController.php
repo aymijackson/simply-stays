@@ -16,6 +16,7 @@ use Modules\Bookings\Models\Booking;
 use Modules\Bookings\Models\GuestRegistration;
 use Modules\Bookings\Support\GuestRegistrationForm;
 use Modules\Bookings\Support\GuestRegistrationPrefill;
+use Modules\Core\Support\RouteKey;
 use Modules\Listings\Models\Property;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -35,7 +36,7 @@ class GuestRegistrationController extends Controller
             ->latest();
 
         if ($request->filled('property')) {
-            $query->where('property_id', $request->integer('property'));
+            $query->where('property_id', RouteKey::id(Property::class, $request->query('property')) ?? 0);
         }
 
         if ($request->filled('q')) {
@@ -55,11 +56,11 @@ class GuestRegistrationController extends Controller
         $property = null;
 
         if ($request->filled('booking')) {
-            $booking = Booking::with(['listing.property', 'guest', 'transactions'])->findOrFail($request->integer('booking'));
+            $booking = RouteKey::find(Booking::class, $request->query('booking'), Booking::with(['listing.property', 'guest', 'transactions'])) ?? abort(404);
             $property = $booking->listing->property;
             abort_unless($booking->guest_id === $user->id || $this->isStaffFor($user, $property), 403);
         } elseif ($request->filled('property')) {
-            $property = Property::findOrFail($request->integer('property'));
+            $property = RouteKey::find(Property::class, $request->query('property')) ?? abort(404);
         }
 
         $asStaff = $property ? $this->isStaffFor($user, $property) : false;

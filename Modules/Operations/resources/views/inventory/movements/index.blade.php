@@ -27,7 +27,7 @@
                 @foreach ($locations->groupBy(fn ($l) => $l->type === 'apartment' ? $l->name : 'Store & service areas') as $group => $groupLocations)
                     <optgroup label="{{ $group }}">
                         @foreach ($groupLocations as $loc)
-                            <option value="{{ $loc->id }}" @selected((int) request('location') === $loc->id)>{{ $loc->type === 'apartment' ? ($loc->area ?? $loc->name) : $loc->label() }}</option>
+                            <option value="{{ $loc->getRouteKey() }}" @selected(request('location') === $loc->getRouteKey())>{{ $loc->type === 'apartment' ? ($loc->area ?? $loc->name) : $loc->label() }}</option>
                         @endforeach
                     </optgroup>
                 @endforeach

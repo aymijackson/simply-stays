@@ -56,7 +56,7 @@ class AdminServiceOversightTest extends TestCase
         $this->actingAs($this->admin)->get(route('provider.services.index'))
             ->assertOk()->assertSee('All services')->assertSee('Same-day Laundry')->assertSee('Ironing Only')->assertSee('CleanCo');
 
-        $this->actingAs($this->admin)->get(route('provider.services.index', ['provider' => $this->otherProvider->id]))
+        $this->actingAs($this->admin)->get(route('provider.services.index', ['provider' => $this->otherProvider]))
             ->assertOk()->assertSee('Ironing Only')->assertDontSee('Same-day Laundry');
 
         $this->actingAs($this->admin)->get(route('provider.services.index', ['status' => 'published']))

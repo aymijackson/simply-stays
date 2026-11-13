@@ -11,7 +11,7 @@
 
         <div class="card ops-form-card">
             @if ($transaction->booking_id)
-                <p class="form-hint">Posted automatically from booking #{{ $transaction->booking_id }}.</p>
+                <p class="form-hint">Posted automatically from booking {{ $transaction->booking?->referenceCode() }}.</p>
             @endif
             <form method="POST" action="{{ $transaction->exists ? route('ops.finance.update', $transaction) : route('ops.finance.store') }}" enctype="multipart/form-data" data-finance-form>
                 @csrf

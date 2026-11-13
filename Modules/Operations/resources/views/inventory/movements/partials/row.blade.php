@@ -10,7 +10,7 @@
 <div class="ops-row ops-move ops-move--{{ $m->type }}">
     <div>
         <strong>{{ $sign }}{{ abs($m->quantity) }} {{ $m->item?->unit }}</strong>
-        <a href="{{ route('ops.inventory.items.show', $m->item_id) }}">{{ $m->item?->name }}</a>
+        <a href="{{ route('ops.inventory.items.show', $m->item) }}">{{ $m->item?->name }}</a>
         <div class="form-hint" style="margin:0;">
             {{ $m->typeLabel() }}:
             @if ($m->fromLocation) {{ $m->fromLocation->label() }} @endif

@@ -32,8 +32,9 @@
                     <h2>About this service</h2>
                     <p>{{ $service->description ?: 'No description provided yet.' }}</p>
                     <p style="display: flex; align-items: center; gap: 0.5rem; margin: 0;">
-                        <span class="avatar" style="width:28px;height:28px;font-size:0.8rem;">{{ strtoupper(substr($service->provider->name, 0, 1)) }}</span>
-                        Offered by {{ $service->provider->name }}
+                        @php $offeredBy = $service->offeredBy(); @endphp
+                        <span class="avatar" style="width:28px;height:28px;font-size:0.8rem;">{{ strtoupper(mb_substr($offeredBy, 0, 1)) }}</span>
+                        Offered by {{ $offeredBy }}
                     </p>
                 </div>
 

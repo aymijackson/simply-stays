@@ -18,7 +18,7 @@
                     <select name="property" id="pick-property" class="form-control" onchange="this.form.booking && (this.form.booking.value = ''); this.form.submit();">
                         <option value="">Select a property&hellip;</option>
                         @foreach ($propertyOptions as $option)
-                            <option value="{{ $option->id }}" @selected($property?->id === $option->id)>{{ $option->name }}</option>
+                            <option value="{{ $option->getRouteKey() }}" @selected($property?->id === $option->id)>{{ $option->name }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -29,8 +29,8 @@
                         <select name="booking" id="pick-booking" class="form-control" onchange="this.form.property.value = ''; this.form.submit();">
                             <option value="">No booking &mdash; blank form</option>
                             @foreach ($bookingOptions as $option)
-                                <option value="{{ $option->id }}" @selected($booking?->id === $option->id)>
-                                    #{{ $option->id }} &middot; {{ $option->guest->name }} &middot; {{ $option->listing->title }} ({{ $option->check_in->format('M j') }}&ndash;{{ $option->check_out->format('M j') }})
+                                <option value="{{ $option->getRouteKey() }}" @selected($booking?->id === $option->id)>
+                                    {{ $option->referenceCode() }} &middot; {{ $option->guest->name }} &middot; {{ $option->listing->title }} ({{ $option->check_in->format('M j') }}&ndash;{{ $option->check_out->format('M j') }})
                                 </option>
                             @endforeach
                         </select>
@@ -47,7 +47,7 @@
                 <input type="hidden" name="property_id" value="{{ $property->id }}">
                 @if ($booking)
                     <input type="hidden" name="booking_id" value="{{ $booking->id }}">
-                    <div class="alert alert-success" style="margin-bottom: 1rem;">Prefilled from booking #{{ $booking->id }}. Check every field and correct anything that has changed.</div>
+                    <div class="alert alert-success" style="margin-bottom: 1rem;">Prefilled from booking {{ $booking->referenceCode() }}. Check every field and correct anything that has changed.</div>
                 @endif
 
                 @include('bookings::guest-forms.partials.letterhead', ['property' => $property, 'settings' => $settings])

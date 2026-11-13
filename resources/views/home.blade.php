@@ -78,7 +78,7 @@
                         default => 'sparkles',
                     };
                 @endphp
-                <a href="{{ route('services.index', ['category' => $category->id]) }}" class="tile">
+                <a href="{{ route('services.index', ['category' => $category]) }}" class="tile">
                     <span class="tile__icon"><x-icon :name="$tileIcon" /></span>
                     <span class="tile__label">{{ $category->name }}</span>
                 </a>

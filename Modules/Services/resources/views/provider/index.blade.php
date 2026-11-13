@@ -24,7 +24,7 @@
                     <option value="">All providers</option>
                     <option value="in_house" @selected(request('provider') === 'in_house')>In-house only</option>
                     @foreach ($providers as $provider)
-                        <option value="{{ $provider->id }}" @selected((int) request('provider') === $provider->id)>{{ $provider->name }}</option>
+                        <option value="{{ $provider->getRouteKey() }}" @selected(request('provider') === $provider->getRouteKey())>{{ $provider->name }}</option>
                     @endforeach
                 </select>
             @endif

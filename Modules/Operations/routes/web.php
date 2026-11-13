@@ -71,6 +71,6 @@ Route::middleware('auth')->prefix('operations')->name('ops.')->group(function ()
     Route::get('finance/{transaction}/edit', [FinanceController::class, 'edit'])->name('finance.edit');
     Route::put('finance/{transaction}', [FinanceController::class, 'update'])->name('finance.update');
     Route::delete('finance/{transaction}', [FinanceController::class, 'destroy'])->name('finance.destroy');
-    Route::get('finance/{transaction}/receipts/{media}', [FinanceController::class, 'receipt'])->name('finance.receipt');
-    Route::delete('finance/{transaction}/receipts/{media}', [FinanceController::class, 'destroyReceipt'])->name('finance.receipt.destroy');
+    Route::get('finance/{transaction}/receipts/{media:uuid}', [FinanceController::class, 'receipt'])->name('finance.receipt');
+    Route::delete('finance/{transaction}/receipts/{media:uuid}', [FinanceController::class, 'destroyReceipt'])->name('finance.receipt.destroy');
 });

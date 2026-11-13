@@ -67,7 +67,7 @@
                                     @if ($vendor->phone)<div class="form-hint" style="margin: 0;">{{ $vendor->phone }}</div>@endif
                                 </td>
                                 <td class="ops-num">
-                                    <a href="{{ route('provider.services.index', ['provider' => $vendor->id]) }}">{{ (int) ($s->total ?? 0) }}</a>
+                                    <a href="{{ route('provider.services.index', ['provider' => $vendor]) }}">{{ (int) ($s->total ?? 0) }}</a>
                                     <div class="form-hint" style="margin: 0;">{{ (int) ($s->live ?? 0) }} live</div>
                                 </td>
                                 <td class="ops-num">
@@ -83,7 +83,7 @@
                                 </td>
                                 <td>
                                     <div style="display: flex; gap: 0.4rem; justify-content: flex-end; flex-wrap: wrap;">
-                                        <a href="{{ route('provider.services.create', ['provider' => $vendor->id]) }}" class="btn btn-outline btn-sm">Add service</a>
+                                        <a href="{{ route('provider.services.create', ['provider' => $vendor]) }}" class="btn btn-outline btn-sm">Add service</a>
                                         <a href="{{ route('admin.vendors.edit', $vendor) }}" class="btn btn-ghost btn-sm">Edit</a>
                                         <form method="POST" action="{{ route('admin.users.status', $vendor) }}" onsubmit="return confirm('{{ $vendor->status === 'suspended' ? 'Reactivate' : 'Suspend' }} {{ addslashes($vendor->name) }}?');">
                                             @csrf

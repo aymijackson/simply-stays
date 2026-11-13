@@ -50,7 +50,7 @@ class SupportChatController extends Controller
         }
 
         $response = response()->json([
-            'conversation_id' => $conversation->id,
+            'conversation_id' => $conversation->public_id,
             'status' => $conversation->status,
             'messages' => $this->formatMessages($conversation),
         ]);

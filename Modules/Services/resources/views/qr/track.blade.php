@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Order #'.$order->id)
+@section('title', 'Order '.$order->referenceCode())
 
 @section('content')
 @php
@@ -11,7 +11,7 @@
 <div class="page page--tight">
     <div class="container qr-order">
         <div class="card qr-order__card">
-            <p class="qr-order__eyebrow">Order #{{ $order->id }} · {{ $order->created_at->format('j M, g:i A') }}</p>
+            <p class="qr-order__eyebrow">Order {{ $order->referenceCode() }} · {{ $order->created_at->format('j M, g:i A') }}</p>
             <h1 class="qr-order__title">{{ $order->service->title }}</h1>
             @if ($order->deliverTo())
                 <p class="qr-order__room"><x-icon name="map-pin" style="width:16px;height:16px;" /> {{ $order->deliverTo() }}</p>

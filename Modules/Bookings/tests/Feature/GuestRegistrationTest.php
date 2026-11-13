@@ -80,7 +80,7 @@ class GuestRegistrationTest extends TestCase
     public function test_create_form_prefills_from_booking(): void
     {
         $this->actingAs($this->guest)
-            ->get(route('guest-forms.create', ['booking' => $this->booking->id]))
+            ->get(route('guest-forms.create', ['booking' => $this->booking]))
             ->assertOk()
             ->assertSee('Premium Stay')
             ->assertSee('value="Ada Guest"', false)
@@ -92,7 +92,7 @@ class GuestRegistrationTest extends TestCase
     public function test_property_only_gives_blank_default_form(): void
     {
         $this->actingAs($this->admin)
-            ->get(route('guest-forms.create', ['property' => $this->property->id]))
+            ->get(route('guest-forms.create', ['property' => $this->property]))
             ->assertOk()
             ->assertSee('1. Guest information')
             ->assertSee('8. For office use only');
@@ -157,10 +157,10 @@ class GuestRegistrationTest extends TestCase
             ->assertForbidden();
 
         $this->actingAs($this->admin)
-            ->post(route('guest-forms.scans.store', $registration), ['scans' => [UploadedFile::fake()->image('form.jpg'), UploadedFile::fake()->createWithContent('form.pdf', "%PDF-1.4
+            ->post(route('guest-forms.scans.store', $registration), ['scans' => [UploadedFile::fake()->image('form.jpg'), UploadedFile::fake()->createWithContent('form.pdf', '%PDF-1.4
 1 0 obj<<>>endobj
 trailer<<>>
-%%EOF")]])
+%%EOF')]])
             ->assertRedirect(route('guest-forms.show', $registration));
 
         $scans = $registration->getMedia('scans');
@@ -186,6 +186,6 @@ trailer<<>>
 
         $this->actingAs($stranger)->get(route('guest-forms.show', $registration))->assertForbidden();
         $this->actingAs($stranger)->get(route('guest-forms.index'))->assertOk()->assertDontSee('GR-');
-        $this->actingAs($this->host)->get(route('guest-forms.index'))->assertOk()->assertSee($registration->reference());
+        $this->actingAs($this->host)->get(route('guest-forms.index'))->assertOk()->assertSee($registration->referenceCode());
     }
 }

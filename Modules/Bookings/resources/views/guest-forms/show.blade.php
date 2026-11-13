@@ -1,6 +1,6 @@
 @extends(auth()->user()->portalLayout())
 
-@section('title', 'Guest registration '.$registration->reference())
+@section('title', 'Guest registration '.$registration->referenceCode())
 
 @section('content')
 @php $form = \Modules\Bookings\Support\GuestRegistrationForm::class; @endphp
@@ -23,9 +23,9 @@
 
         <div class="card gform gform--print">
             <div class="gform-meta">
-                <span><strong>{{ $registration->reference() }}</strong></span>
+                <span><strong>{{ $registration->referenceCode() }}</strong></span>
                 @if ($registration->booking)
-                    <span>Booking <a href="{{ route('bookings.show', $registration->booking) }}">#{{ $registration->booking_id }}</a></span>
+                    <span>Booking <a href="{{ route('bookings.show', $registration->booking) }}">{{ $registration->booking->referenceCode() }}</a></span>
                 @endif
                 <span>Submitted {{ $registration->created_at->format('M j, Y g:ia') }}@if ($registration->creator) by {{ $registration->creator->name }}@endif</span>
             </div>

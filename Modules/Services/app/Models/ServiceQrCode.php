@@ -33,6 +33,12 @@ class ServiceQrCode extends Model
         });
     }
 
+    /** URLs use the random token, never the database id. */
+    public function getRouteKeyName(): string
+    {
+        return 'token';
+    }
+
     public static function for(Service $service, ?InventoryLocation $location = null): self
     {
         return self::firstOrCreate(['service_id' => $service->id, 'location_id' => $location?->id]);

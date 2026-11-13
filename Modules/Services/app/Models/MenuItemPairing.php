@@ -4,9 +4,12 @@ namespace Modules\Services\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Modules\Core\Traits\HasPublicId;
 
 class MenuItemPairing extends Model
 {
+    use HasPublicId;
+
     protected $table = 'menu_item_pairings';
 
     protected $fillable = [

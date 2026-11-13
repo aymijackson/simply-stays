@@ -9,6 +9,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
+use Modules\Core\Support\RouteKey;
 use Modules\Operations\Models\FinanceCategory;
 use Modules\Operations\Models\FinanceTransaction;
 use Modules\Operations\Models\InventoryItem;
@@ -32,7 +33,7 @@ class InventoryMovementController extends OpsController
             $query->where('type', $request->string('type'));
         }
         if ($request->filled('location')) {
-            $id = $request->integer('location');
+            $id = RouteKey::id(InventoryLocation::class, $request->query('location'), InventoryLocation::where('property_id', $property->id)) ?? 0;
             $query->where(fn ($q) => $q->where('from_location_id', $id)->orWhere('to_location_id', $id));
         }
         if ($request->filled('q')) {
@@ -62,9 +63,9 @@ class InventoryMovementController extends OpsController
             'items' => InventoryItem::where('property_id', $property->id)->where('is_active', true)->orderBy('name')->get(['id', 'name', 'unit', 'unit_cost_amount']),
             'locations' => $this->locations($property->id),
             'staff' => StaffMember::where('property_id', $property->id)->active()->orderBy('name')->get(['id', 'name', 'position']),
-            'presetItem' => $request->integer('item') ?: null,
-            'presetFrom' => $request->integer('from') ?: null,
-            'presetTo' => $request->integer('to') ?: null,
+            'presetItem' => RouteKey::id(InventoryItem::class, $request->query('item'), InventoryItem::where('property_id', $property->id)),
+            'presetFrom' => RouteKey::id(InventoryLocation::class, $request->query('from'), InventoryLocation::where('property_id', $property->id)),
+            'presetTo' => RouteKey::id(InventoryLocation::class, $request->query('to'), InventoryLocation::where('property_id', $property->id)),
             'canManage' => $this->can($request, $property, 'manager'),
         ]);
     }

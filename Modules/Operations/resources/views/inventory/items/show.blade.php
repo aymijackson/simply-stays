@@ -19,8 +19,8 @@
                 </span>
             </div>
             <div class="ops-toolbar__actions">
-                <a href="{{ route('ops.inventory.movements.create', ['type' => 'receive', 'item' => $item->id]) }}" class="btn btn-outline">Receive</a>
-                <a href="{{ route('ops.inventory.movements.create', ['type' => 'transfer', 'item' => $item->id]) }}" class="btn btn-outline">Move / issue</a>
+                <a href="{{ route('ops.inventory.movements.create', ['type' => 'receive', 'item' => $item]) }}" class="btn btn-outline">Receive</a>
+                <a href="{{ route('ops.inventory.movements.create', ['type' => 'transfer', 'item' => $item]) }}" class="btn btn-outline">Move / issue</a>
                 @if ($canManage)<a href="{{ route('ops.inventory.items.edit', $item) }}" class="btn btn-primary">Edit</a>@endif
             </div>
         </div>

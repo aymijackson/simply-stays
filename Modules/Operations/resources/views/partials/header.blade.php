@@ -23,7 +23,7 @@
                 <x-icon name="building" style="width:16px;height:16px;" />
                 <select id="ops-property" name="property" class="form-control" onchange="this.form.submit()">
                     @foreach ($opsProperties as $p)
-                        <option value="{{ $p->id }}" @selected($opsProperty?->id === $p->id)>{{ $p->name }}</option>
+                        <option value="{{ $p->slug }}" @selected($opsProperty?->id === $p->id)>{{ $p->name }}</option>
                     @endforeach
                 </select>
             </form>

@@ -9,10 +9,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Modules\Core\Enums\Currency;
 use Modules\Core\Support\Money;
+use Modules\Core\Traits\HasPublicId;
 use Modules\Listings\Models\Property;
 
 class StaffMember extends Model
 {
+    use HasPublicId;
+
     protected $table = 'ops_staff_members';
 
     public const ACCESS_LEVELS = [

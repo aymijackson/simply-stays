@@ -5,13 +5,16 @@ namespace Modules\Bookings\Models;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Modules\Core\Traits\HasPublicId;
 use Modules\Listings\Models\Property;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
 class GuestRegistration extends Model implements HasMedia
 {
-    use InteractsWithMedia;
+    use HasPublicId, InteractsWithMedia;
+
+    public const REFERENCE_PREFIX = 'GR';
 
     /** Hand-filled scans hold personal data, so they live on the private disk and are streamed through an authorised route. */
     public const SCANS_DISK = 'local';
@@ -71,11 +74,6 @@ class GuestRegistration extends Model implements HasMedia
         $value = $this->data[$key] ?? null;
 
         return $value === null || $value === '' ? null : (string) $value;
-    }
-
-    public function reference(): string
-    {
-        return 'GR-'.str_pad((string) $this->id, 5, '0', STR_PAD_LEFT);
     }
 
     public function isStaff(User $user): bool

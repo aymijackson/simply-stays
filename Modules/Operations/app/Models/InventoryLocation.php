@@ -5,11 +5,14 @@ namespace Modules\Operations\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Modules\Core\Traits\HasPublicId;
 use Modules\Listings\Models\Listing;
 use Modules\Listings\Models\Property;
 
 class InventoryLocation extends Model
 {
+    use HasPublicId;
+
     protected $table = 'ops_inventory_locations';
 
     public const TYPES = [

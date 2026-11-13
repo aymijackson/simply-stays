@@ -6,9 +6,12 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Modules\Core\Traits\HasPublicId;
 
 class EventOccurrence extends Model
 {
+    use HasPublicId;
+
     protected $fillable = [
         'event_id',
         'date',

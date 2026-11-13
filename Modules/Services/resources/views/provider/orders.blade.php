@@ -38,7 +38,7 @@
                     <article class="card so-card @if ($isNew) is-new @endif" id="order-{{ $order->id }}">
                         <header class="so-card__head">
                             <div>
-                                <strong>#{{ $order->id }} · {{ $order->service->title }}</strong>
+                                <strong>{{ $order->referenceCode() }} · {{ $order->service->title }}</strong>
                                 @if ($isNew)<span class="badge badge--gold">New</span>@endif
                                 <div class="form-hint" style="margin: 0;">
                                     {{ $order->created_at->diffForHumans() }} · {{ $sources[$order->source] ?? 'Website' }}

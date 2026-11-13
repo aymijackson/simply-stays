@@ -20,8 +20,10 @@ class OpsContext
         $properties = OpsAccess::properties($request->user());
         abort_if($properties->isEmpty(), 403, 'You are not linked to any property yet.');
 
-        $wanted = $request->integer('property') ?: (int) $request->session()->get(self::SESSION_KEY);
-        $property = $properties->firstWhere('id', $wanted) ?? $properties->first();
+        // ?property= carries the slug; the session remembers the id.
+        $property = ($request->filled('property') ? $properties->firstWhere('slug', $request->query('property')) : null)
+            ?? $properties->firstWhere('id', (int) $request->session()->get(self::SESSION_KEY))
+            ?? $properties->first();
 
         $request->session()->put(self::SESSION_KEY, $property->id);
 

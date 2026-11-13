@@ -29,7 +29,7 @@ class ServiceOrderPlaced extends Notification implements ShouldQueue
         $fmt = fn ($minor) => Money::fromMinorUnits((int) $minor, $currency)->format();
 
         $mail = (new MailMessage)
-            ->subject("Order received: {$order->service->title} (#{$order->id})")
+            ->subject("Order received: {$order->service->title} ({$order->referenceCode()})")
             ->greeting('Thanks, '.$order->contactName().'!')
             ->line("We've received your order for {$order->service->title}. We'll confirm it shortly.");
 

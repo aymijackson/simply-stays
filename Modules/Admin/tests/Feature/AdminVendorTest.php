@@ -103,7 +103,7 @@ class AdminVendorTest extends TestCase
     {
         $vendor = $this->vendor();
 
-        $this->actingAs($this->admin)->get(route('provider.services.create', ['provider' => $vendor->id]))
+        $this->actingAs($this->admin)->get(route('provider.services.create', ['provider' => $vendor]))
             ->assertOk()->assertSee('Sunrise Kitchen');
 
         $this->actingAs($this->admin)->post(route('provider.services.store'), $this->servicePayload(['provider_id' => $vendor->id]))

@@ -24,6 +24,6 @@ Route::middleware('auth')->prefix('guest-forms')->name('guest-forms.')->group(fu
     Route::put('{guestRegistration}', [GuestRegistrationController::class, 'update'])->name('update');
     Route::delete('{guestRegistration}', [GuestRegistrationController::class, 'destroy'])->name('destroy');
     Route::post('{guestRegistration}/scans', [GuestRegistrationController::class, 'storeScans'])->name('scans.store');
-    Route::get('{guestRegistration}/scans/{media}', [GuestRegistrationController::class, 'showScan'])->name('scans.show');
-    Route::delete('{guestRegistration}/scans/{media}', [GuestRegistrationController::class, 'destroyScan'])->name('scans.destroy');
+    Route::get('{guestRegistration}/scans/{media:uuid}', [GuestRegistrationController::class, 'showScan'])->name('scans.show');
+    Route::delete('{guestRegistration}/scans/{media:uuid}', [GuestRegistrationController::class, 'destroyScan'])->name('scans.destroy');
 });

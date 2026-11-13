@@ -15,7 +15,7 @@
                 <select name="property" class="form-control" onchange="this.form.submit()">
                     <option value="">All properties</option>
                     @foreach ($properties as $property)
-                        <option value="{{ $property->id }}" @selected((int) request('property') === $property->id)>{{ $property->name }}</option>
+                        <option value="{{ $property->getRouteKey() }}" @selected(request('property') === $property->getRouteKey())>{{ $property->name }}</option>
                     @endforeach
                 </select>
                 <input type="search" name="q" value="{{ request('q') }}" class="form-control" placeholder="Search guest name">
@@ -45,7 +45,7 @@
                     <tbody>
                         @foreach ($registrations as $registration)
                             <tr>
-                                <td style="white-space: nowrap;"><strong>{{ $registration->reference() }}</strong>@if ($registration->booking_id)<div class="form-hint" style="margin: 0;">Booking #{{ $registration->booking_id }}</div>@endif</td>
+                                <td style="white-space: nowrap;"><strong>{{ $registration->referenceCode() }}</strong>@if ($registration->booking_id)<div class="form-hint" style="margin: 0;">Booking {{ $registration->booking?->referenceCode() }}</div>@endif</td>
                                 <td>{{ $registration->guest_name ?? '—' }}</td>
                                 <td>{{ $registration->property?->name }}</td>
                                 <td style="white-space: nowrap;">

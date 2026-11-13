@@ -53,7 +53,7 @@
                                 <td class="ops-nowrap">{{ $member->phone ?? '—' }}</td>
                                 <td><span class="badge @if ($member->access_level === 'manager') badge--gold @endif">{{ $member->accessLabel() }}</span></td>
                                 <td class="ops-num">{{ Fmt::money($member->salary_amount, $member->currency) }}</td>
-                                <td><a href="{{ route('ops.shifts.create', ['staff' => $member->id]) }}" class="btn btn-ghost btn-sm">Schedule</a></td>
+                                <td><a href="{{ route('ops.shifts.create', ['staff' => $member]) }}" class="btn btn-ghost btn-sm">Schedule</a></td>
                             </tr>
                         @endforeach
                     </tbody>

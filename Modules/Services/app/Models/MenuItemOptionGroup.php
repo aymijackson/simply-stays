@@ -5,9 +5,12 @@ namespace Modules\Services\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Modules\Core\Traits\HasPublicId;
 
 class MenuItemOptionGroup extends Model
 {
+    use HasPublicId;
+
     protected $fillable = [
         'menu_item_id',
         'name',

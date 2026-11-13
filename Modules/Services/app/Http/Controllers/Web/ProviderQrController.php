@@ -41,7 +41,7 @@ class ProviderQrController extends Controller
         $data = $request->validate([
             'generic' => ['nullable', 'boolean'],
             'locations' => ['nullable', 'array'],
-            'locations.*' => ['integer'],
+            'locations.*' => ['string', 'max:40'],
             'copies' => ['nullable', 'integer', 'min:1', 'max:20'],
         ]);
 
@@ -50,9 +50,9 @@ class ProviderQrController extends Controller
             $cards->push(ServiceQrCode::for($service));
         }
 
-        $allowed = $this->rooms($service)->keyBy('id');
-        foreach ($data['locations'] ?? [] as $id) {
-            if ($location = $allowed->get((int) $id)) {
+        $allowed = $this->rooms($service)->keyBy('public_id');
+        foreach ($data['locations'] ?? [] as $key) {
+            if ($location = $allowed->get($key)) {
                 $cards->push(ServiceQrCode::for($service, $location)->setRelation('location', $location));
             }
         }

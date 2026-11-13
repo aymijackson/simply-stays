@@ -257,7 +257,7 @@ class LaundryQrOrderingTest extends TestCase
         $this->actingAs($this->vendor)->get(route('provider.services.qr', $this->laundry))
             ->assertOk()->assertSee('General code')->assertSee('Bedroom')->assertSee('<svg', false);
 
-        $this->actingAs($this->vendor)->get(route('provider.services.qr.print', [$this->laundry, 'generic' => 1, 'locations' => [$this->kingBedroom->id], 'copies' => 2]))
+        $this->actingAs($this->vendor)->get(route('provider.services.qr.print', [$this->laundry, 'generic' => 1, 'locations' => [$this->kingBedroom->public_id], 'copies' => 2]))
             ->assertOk()->assertSee('4 cards')->assertSee('King Suite — Bedroom');
 
         $code = ServiceQrCode::for($this->laundry, $this->kingBedroom);

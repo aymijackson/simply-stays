@@ -6,9 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Modules\Core\Enums\Currency;
 use Modules\Core\Support\Money;
+use Modules\Core\Traits\HasPublicId;
 
 class MenuItemOption extends Model
 {
+    use HasPublicId;
+
     protected $fillable = [
         'menu_item_option_group_id',
         'name',

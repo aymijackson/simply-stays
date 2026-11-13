@@ -10,11 +10,20 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Modules\Core\Enums\Currency;
 use Modules\Core\Support\Money;
+use Modules\Core\Traits\Sluggable;
 use Modules\Listings\Models\Property;
 use Modules\Reviews\Models\Review;
 
 class Service extends Model
 {
+    use Sluggable;
+
+    /** URLs use the slug (from the title), never the database id. */
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
+
     protected $fillable = [
         'provider_id',
         'service_category_id',
@@ -92,6 +101,31 @@ class Service extends Model
     public function isInHouse(): bool
     {
         return (bool) $this->provider?->hasRole('Admin');
+    }
+
+    /**
+     * The name guests see as the provider. Vendors show their own name; in-house
+     * services show the property (never the admin account that holds them): the
+     * order's property when known, else the property the service is limited to,
+     * else the site's name.
+     */
+    public function offeredBy(?Property $context = null): string
+    {
+        if (! $this->isInHouse()) {
+            return $this->provider?->name ?? config('app.name');
+        }
+
+        if ($context) {
+            return $context->name;
+        }
+
+        $this->loadMissing('properties');
+
+        return match ($this->properties->count()) {
+            0 => config('app.name'),
+            1 => $this->properties->first()->name,
+            default => $this->properties->pluck('name')->join(', ', ' & '),
+        };
     }
 
     public function providerLabel(): string

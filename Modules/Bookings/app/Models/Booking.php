@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Modules\Core\Enums\Currency;
 use Modules\Core\Support\Money;
+use Modules\Core\Traits\HasPublicId;
 use Modules\Listings\Models\Listing;
 use Modules\Payments\Contracts\Payable;
 use Modules\Payments\Models\PaymentTransaction;
@@ -17,7 +18,9 @@ use Spatie\Activitylog\Traits\LogsActivity;
 
 class Booking extends Model implements Payable
 {
-    use LogsActivity;
+    use HasPublicId, LogsActivity;
+
+    public const REFERENCE_PREFIX = 'BK';
 
     protected $fillable = [
         'listing_id',
@@ -98,7 +101,7 @@ class Booking extends Model implements Payable
 
     public function paymentDescription(): string
     {
-        return 'Booking #'.$this->id.' - '.$this->listing->title;
+        return 'Booking '.$this->referenceCode().' - '.$this->listing->title;
     }
 
     public function paymentAmountMinorUnits(): int

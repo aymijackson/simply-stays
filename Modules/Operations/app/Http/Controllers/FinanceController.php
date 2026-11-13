@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
+use Modules\Core\Support\RouteKey;
 use Modules\Listings\Models\Property;
 use Modules\Operations\Models\FinanceCategory;
 use Modules\Operations\Models\FinanceTransaction;
@@ -211,7 +212,7 @@ class FinanceController extends OpsController
             ->where('property_id', $property->id)
             ->whereBetween('occurred_on', [$from->toDateString(), $to->toDateString()])
             ->when(in_array($request->input('type'), ['income', 'expense'], true), fn ($q) => $q->where('type', $request->input('type')))
-            ->when($request->filled('category'), fn ($q) => $q->where('category_id', $request->integer('category')))
+            ->when($request->filled('category'), fn ($q) => $q->where('category_id', RouteKey::id(FinanceCategory::class, $request->query('category')) ?? 0))
             ->when($request->filled('method'), fn ($q) => $q->where('payment_method', $request->string('method')))
             ->when($request->filled('q'), fn ($q) => $q->where(fn ($w) => $w
                 ->where('description', 'like', '%'.$request->string('q').'%')

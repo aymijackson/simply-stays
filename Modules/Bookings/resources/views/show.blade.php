@@ -58,7 +58,7 @@
                     @if ($registration = \Modules\Bookings\Models\GuestRegistration::where('booking_id', $booking->id)->latest()->first())
                         <a href="{{ route('guest-forms.show', $registration) }}" class="btn btn-outline">Registration form</a>
                     @else
-                        <a href="{{ route('guest-forms.create', ['booking' => $booking->id]) }}" class="btn btn-outline">Fill registration form</a>
+                        <a href="{{ route('guest-forms.create', ['booking' => $booking]) }}" class="btn btn-outline">Fill registration form</a>
                     @endif
                 @endif
 
