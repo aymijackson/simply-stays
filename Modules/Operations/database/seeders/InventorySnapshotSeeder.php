@@ -123,7 +123,6 @@ class InventorySnapshotSeeder extends Seeder
         $add('staff_room', 'Staff quarters', 'staff', 'Staff room');
         $add('boys_room', 'Staff quarters', 'staff', "Boys' room");
         $add('girls_room', 'Staff quarters', 'staff', "Girls' room");
-        $add('madam', "Madam's room", 'other');
 
         foreach ($this->suites() as $suite => $areas) {
             foreach (array_keys($areas) as $area) {
@@ -588,6 +587,8 @@ class InventorySnapshotSeeder extends Seeder
     {
         $queenBed = $this->suiteKey('Queen Suite', 'Bedroom');
         $kingKitchen = $this->suiteKey('King Suite', 'Kitchen');
+        // "Madam's room" in the notebook is the King Suite.
+        $kingLiving = $this->suiteKey('King Suite', 'Living room');
 
         return [
             // 5 Nov — decor put out around the property
@@ -631,7 +632,7 @@ class InventorySnapshotSeeder extends Seeder
                 'Lamp' => 1, 'Cooking spoon' => 1, 'Slotted spoon & egg poacher' => 1, 'Rug' => 1, 'Plaster' => 1, 'Rubber hanger' => 7,
                 'Iron hanger' => 4, 'Snowsea fridge' => 1, 'Frame' => 1,
             ], 'New stock 9/11/2026'],
-            ['2026-11-09', 'transfer', 'store', 'madam', ['Umbrella' => 2], 'Umbrellas carried to Madam\'s room, 2 left'],
+            ['2026-11-09', 'transfer', 'store', $kingLiving, ['Umbrella' => 2], "Umbrellas carried to Madam's room (King Suite), 2 left"],
             ['2026-11-09', 'transfer', 'store', 'laundry', ['Stapling gun' => 1], 'Given to Ekerette', 'ekerette'],
             ['2026-11-09', 'transfer', 'laundry', 'store', ['Stapling gun' => 1], 'Returned', 'ekerette'],
             ['2026-11-09', 'transfer', 'store', 'laundry', ['Sponge' => 1], 'Carried out by the cleaner', 'marvellous'],

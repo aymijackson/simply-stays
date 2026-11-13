@@ -327,6 +327,11 @@ class OperationsTest extends TestCase
         $this->assertSame('asset', $item('Hisense fridge')->kind);
         $this->assertSame(6, InventoryLocation::where('property_id', $this->property->id)->where('type', 'apartment')->distinct()->count('name'));
 
+        // "Madam's room" in the notebook is the King Suite, not a location of its own.
+        $this->assertFalse(InventoryLocation::where('name', "Madam's room")->exists());
+        $kingLiving = InventoryLocation::where('name', 'King Suite')->where('area', 'Living room')->sole();
+        $this->assertSame(2, StockLedger::quantity($item('Umbrella'), $kingLiving));
+
         // Every stock line equals the sum of its movements.
         foreach (InventoryStock::with('item')->get() as $stock) {
             $in = InventoryMovement::where('item_id', $stock->item_id)->where('to_location_id', $stock->location_id)->sum('quantity');
@@ -343,6 +348,26 @@ class OperationsTest extends TestCase
         $this->actingAs($this->host)->get(route('ops.inventory.locations.index'))->assertOk()->assertSee('Presidential Suite');
         $this->actingAs($this->host)->get(route('ops.inventory.movements.index'))->assertOk();
         $this->actingAs($this->host)->get(route('ops.dashboard'))->assertOk();
+    }
+
+    public function test_migration_merges_madams_room_into_king_suite(): void
+    {
+        $king = InventoryLocation::create(['property_id' => $this->property->id, 'name' => 'King Suite', 'area' => 'Living room', 'type' => 'apartment']);
+        $madam = InventoryLocation::create(['property_id' => $this->property->id, 'name' => "Madam's room", 'type' => 'other']);
+        $umbrella = $this->item('Umbrella');
+        $rug = $this->item('Rug');
+        StockLedger::record($umbrella, 'receive', 4, null, $this->store);
+        StockLedger::record($umbrella, 'transfer', 2, $this->store, $madam, ['note' => "Umbrellas carried to Madam's room, 2 left"]);
+        StockLedger::record($rug, 'receive', 1, null, $king);
+        StockLedger::record($rug, 'receive', 1, null, $madam);
+
+        (require base_path('Modules/Operations/database/migrations/2026_11_14_000000_merge_madams_room_into_king_suite.php'))->up();
+
+        $this->assertNull(InventoryLocation::find($madam->id));
+        $this->assertSame(2, StockLedger::quantity($umbrella, $king));
+        $this->assertSame(2, StockLedger::quantity($rug, $king));
+        $this->assertSame(0, InventoryMovement::where('to_location_id', $madam->id)->count());
+        $this->assertTrue(InventoryMovement::where('note', "Umbrellas carried to Madam's room (King Suite), 2 left")->exists());
     }
 
     public function test_pages_render(): void
