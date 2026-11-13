@@ -80,6 +80,29 @@ class Shift extends Model
         return (int) $this->starts_at->diffInMinutes($this->clock_in_at);
     }
 
+    /** Colour slot per duty area (0-7, 8 = none), so "Kitchen" always looks the same on the roster. */
+    public static function areaTone(?string $area): int
+    {
+        $known = [
+            'housekeeping' => 0, 'store' => 1, 'security' => 2, 'night duty' => 2, 'kitchen' => 3,
+            'maintenance' => 4, 'laundry' => 5, 'front desk' => 6, 'reception' => 6,
+        ];
+        $key = strtolower(trim((string) $area));
+
+        return $key === '' ? 8 : ($known[$key] ?? crc32($key) % 8);
+    }
+
+    public function endsNextDay(): bool
+    {
+        return ! $this->ends_at->isSameDay($this->starts_at);
+    }
+
+    /** Status shown on the roster: on duty overrides the stored status. */
+    public function displayStatus(): string
+    {
+        return $this->isOnDuty() ? 'on' : $this->status;
+    }
+
     public static function formatMinutes(int $minutes): string
     {
         return sprintf('%dh %02dm', intdiv($minutes, 60), $minutes % 60);

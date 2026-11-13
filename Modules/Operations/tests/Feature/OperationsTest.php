@@ -246,6 +246,27 @@ class OperationsTest extends TestCase
         $this->assertSame('All clean', $shift->handover_notes);
     }
 
+    public function test_roster_filters_by_department_duty_and_week(): void
+    {
+        $cleaner = StaffMember::create(['property_id' => $this->property->id, 'name' => 'Marvellous', 'position' => 'Cleaner', 'department' => 'Housekeeping']);
+        $guard = StaffMember::create(['property_id' => $this->property->id, 'name' => 'Musa', 'position' => 'Night guard', 'department' => 'Security']);
+        Shift::create(['property_id' => $this->property->id, 'staff_member_id' => $cleaner->id, 'starts_at' => '2026-11-10 07:00', 'ends_at' => '2026-11-10 15:00', 'area' => 'Housekeeping']);
+        Shift::create(['property_id' => $this->property->id, 'staff_member_id' => $guard->id, 'starts_at' => '2026-11-10 19:00', 'ends_at' => '2026-11-11 07:00', 'area' => 'Night duty']);
+
+        $this->actingAs($this->host);
+
+        $this->get(route('ops.shifts.index', ['week' => '2026-11-12']))
+            ->assertOk()->assertSee('9 – 15 Nov 2026')->assertSee('Marvellous')->assertSee('Musa')->assertSee('+1');
+
+        $this->get(route('ops.shifts.index', ['week' => '2026-11-12', 'department' => 'Security']))
+            ->assertOk()->assertSee('Musa')->assertDontSee('Marvellous');
+
+        $this->get(route('ops.shifts.index', ['week' => '2026-11-12', 'area' => 'Housekeeping']))
+            ->assertOk()->assertSee('Marvellous')->assertDontSee('Musa');
+
+        $this->get(route('ops.shifts.index', ['week' => 'not-a-date']))->assertOk();
+    }
+
     public function test_scheduling_repeats_and_overnight_shifts(): void
     {
         [, $member] = $this->staffUser('basic');

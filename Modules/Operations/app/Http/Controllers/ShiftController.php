@@ -21,27 +21,63 @@ class ShiftController extends OpsController
         $property = $this->property($request);
         self::markMissed($property);
 
-        $weekStart = ($request->filled('week') ? CarbonImmutable::parse($request->input('week')) : CarbonImmutable::today())->startOfWeek();
+        try {
+            $anchor = $request->filled('week') ? CarbonImmutable::parse($request->input('week')) : CarbonImmutable::today();
+        } catch (\Throwable) {
+            $anchor = CarbonImmutable::today();
+        }
+        $weekStart = $anchor->startOfWeek();
         $weekEnd = $weekStart->endOfWeek();
 
-        $shifts = Shift::with('staffMember')
+        $weekShifts = Shift::with('staffMember')
             ->where('property_id', $property->id)
             ->where('starts_at', '<=', $weekEnd)
-            ->where('ends_at', '>=', $weekStart)
+            ->where('starts_at', '>=', $weekStart)
             ->orderBy('starts_at')
             ->get();
 
-        $staff = StaffMember::where('property_id', $property->id)
-            ->where(fn ($q) => $q->where('status', 'active')->orWhereIn('id', $shifts->pluck('staff_member_id')))
+        $allStaff = StaffMember::where('property_id', $property->id)
+            ->where(fn ($q) => $q->where('status', 'active')->orWhereIn('id', $weekShifts->pluck('staff_member_id')))
             ->orderBy('department')->orderBy('name')
             ->get();
+
+        $staff = $allStaff
+            ->when($request->filled('department'), fn ($c) => $c->where('department', $request->input('department')))
+            ->when($request->filled('q'), fn ($c) => $c->filter(fn ($m) => str_contains(mb_strtolower($m->name.' '.$m->position), mb_strtolower($request->input('q')))))
+            ->values();
+
+        $shifts = $weekShifts
+            ->whereIn('staff_member_id', $staff->pluck('id'))
+            ->when($request->filled('area'), fn ($c) => $c->where('area', $request->input('area')))
+            ->values();
+
+        // Narrowing by duty hides people with no matching shifts this week.
+        if ($request->filled('area')) {
+            $staff = $staff->whereIn('id', $shifts->pluck('staff_member_id'))->values();
+        }
+
+        $live = $shifts->where('status', '!=', 'cancelled');
+        $days = collect(range(0, 6))->map(fn ($i) => $weekStart->addDays($i));
 
         return view('operations::shifts.index', [
             'property' => $property,
             'weekStart' => $weekStart,
-            'days' => collect(range(0, 6))->map(fn ($i) => $weekStart->addDays($i)),
-            'staff' => $staff,
+            'days' => $days,
+            'staffByDepartment' => $staff->groupBy(fn ($m) => $m->department ?: 'Other'),
+            'staffCount' => $staff->count(),
             'grid' => $shifts->groupBy(fn (Shift $s) => $s->staff_member_id.'|'.$s->starts_at->toDateString()),
+            'byDay' => $shifts->groupBy(fn (Shift $s) => $s->starts_at->toDateString()),
+            'minutesByStaff' => $live->groupBy('staff_member_id')->map(fn ($g) => $g->sum(fn (Shift $s) => $s->scheduledMinutes())),
+            'headcount' => $days->mapWithKeys(fn ($d) => [$d->toDateString() => $live->filter(fn ($s) => $s->starts_at->isSameDay($d))->pluck('staff_member_id')->unique()->count()]),
+            'summary' => [
+                'shifts' => $live->count(),
+                'minutes' => $live->sum(fn (Shift $s) => $s->scheduledMinutes()),
+                'onDuty' => $shifts->filter->isOnDuty()->count(),
+                'missed' => $shifts->where('status', 'missed')->count(),
+            ],
+            'departments' => $allStaff->pluck('department')->filter()->unique()->sort()->values(),
+            'areas' => $weekShifts->pluck('area')->filter()->merge(self::AREAS)->unique()->sort()->values(),
+            'filtered' => (bool) array_filter($request->only(['q', 'department', 'area'])),
             'me' => OpsAccess::staffMember($request->user(), $property),
             'canManage' => $this->can($request, $property, 'manager'),
         ]);
