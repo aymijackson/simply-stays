@@ -67,6 +67,7 @@ class User extends Authenticatable
             'Admin' => 'admin::layouts.admin',
             'Host' => 'layouts.host',
             'ServiceProvider' => 'layouts.provider',
+            'Staff' => 'layouts.staff',
             default => 'layouts.app',
         };
     }

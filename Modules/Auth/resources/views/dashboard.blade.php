@@ -10,6 +10,12 @@
             ['route' => route('bookings.index'), 'icon' => 'calendar', 'label' => 'Bookings on my properties'],
             ['route' => route('events.manage.index'), 'icon' => 'calendar', 'label' => 'Manage events'],
             ['route' => route('payments.index'), 'icon' => 'wallet', 'label' => 'Payouts & earnings'],
+            ['route' => route('ops.dashboard'), 'icon' => 'clipboard', 'label' => 'Operations: inventory, staff & books'],
+        ],
+        'Staff' => [
+            ['route' => route('ops.dashboard'), 'icon' => 'home', 'label' => 'My shifts & overview'],
+            ['route' => route('ops.shifts.index'), 'icon' => 'clock', 'label' => 'Shift roster'],
+            ['route' => route('ops.inventory.movements.create'), 'icon' => 'clipboard', 'label' => 'Record stock movement'],
         ],
         'Agent' => [
             ['route' => route('referrals.index'), 'icon' => 'gift', 'label' => 'My referral codes'],
@@ -30,6 +36,7 @@
             ['route' => route('referrals.index'), 'icon' => 'gift', 'label' => 'Referrals'],
             ['route' => route('reviews.index'), 'icon' => 'star', 'label' => 'Reviews'],
             ['route' => route('admin.activity.index'), 'icon' => 'clock', 'label' => 'Activity log'],
+            ['route' => route('ops.dashboard'), 'icon' => 'clipboard', 'label' => 'Operations: inventory, staff & books'],
         ],
         default => [
             ['route' => route('listings.index'), 'icon' => 'bed', 'label' => 'Find a stay'],

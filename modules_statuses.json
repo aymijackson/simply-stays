@@ -9,5 +9,6 @@
     "Reviews": true,
     "Admin": true,
     "Events": true,
-    "Support": true
+    "Support": true,
+    "Operations": true
 }

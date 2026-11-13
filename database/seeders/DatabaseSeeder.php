@@ -14,6 +14,13 @@ use Modules\Listings\Database\Seeders\ListingsDatabaseSeeder;
 use Modules\Listings\Models\Amenity;
 use Modules\Listings\Models\Listing;
 use Modules\Listings\Models\Property;
+use Modules\Operations\Database\Seeders\InventorySnapshotSeeder;
+use Modules\Operations\Database\Seeders\OperationsDatabaseSeeder;
+use Modules\Operations\Models\FinanceCategory;
+use Modules\Operations\Models\FinanceTransaction;
+use Modules\Operations\Models\Shift;
+use Modules\Operations\Models\StaffMember;
+use Modules\Operations\Services\BookingRevenueSync;
 use Modules\Payments\Models\PaymentTransaction;
 use Modules\Payments\Models\Wallet;
 use Modules\Referrals\Models\AgentProfile;
@@ -343,5 +350,94 @@ class DatabaseSeeder extends Seeder
             'status' => 'pending_approval',
         ]);
         EventOccurrenceGenerator::generate($poolParty);
+
+        $this->seedOperations($property, $admin);
+    }
+
+    /** Inventory from the store notebook, a demo staff login, a week of shifts and some bookkeeping. */
+    private function seedOperations(Property $property, User $admin): void
+    {
+        $this->call(OperationsDatabaseSeeder::class);
+        $this->resolve(InventorySnapshotSeeder::class)->seedFor($property);
+
+        $storeKeeper = User::factory()->create([
+            'name' => 'Grace Etim',
+            'email' => 'staff@shortstay.test',
+        ]);
+        $storeKeeper->assignRole('Staff');
+
+        $grace = StaffMember::create([
+            'property_id' => $property->id,
+            'user_id' => $storeKeeper->id,
+            'name' => 'Grace Etim',
+            'phone' => '08030000000',
+            'position' => 'Store keeper',
+            'department' => 'Store',
+            'access_level' => 'inventory',
+            'hired_on' => now()->subMonths(8)->toDateString(),
+            'salary_amount' => 9000000,
+        ]);
+
+        $marvellous = StaffMember::where('property_id', $property->id)->where('name', 'Marvellous')->first();
+        $marvellous?->update(['salary_amount' => 7000000, 'phone' => '08030000001']);
+
+        foreach (range(0, 6) as $day) {
+            $date = now()->startOfWeek()->addDays($day);
+            Shift::create([
+                'property_id' => $property->id,
+                'staff_member_id' => $grace->id,
+                'starts_at' => $date->copy()->setTime(8, 0),
+                'ends_at' => $date->copy()->setTime(16, 0),
+                'area' => 'Store',
+                'status' => 'scheduled',
+                'created_by' => $admin->id,
+            ]);
+            if ($marvellous) {
+                Shift::create([
+                    'property_id' => $property->id,
+                    'staff_member_id' => $marvellous->id,
+                    'starts_at' => $date->copy()->setTime(7, 0),
+                    'ends_at' => $date->copy()->setTime(15, 0),
+                    'area' => 'Housekeeping',
+                    'status' => 'scheduled',
+                    'created_by' => $admin->id,
+                ]);
+            }
+        }
+
+        BookingRevenueSync::sync($property, $admin->id);
+
+        foreach ([
+            ['utilities', 4500000, 'transfer', 'Electricity distribution company', 'Prepaid electricity units'],
+            ['fuel', 6000000, 'cash', 'Filling station', 'Diesel for generator, 60 litres'],
+            ['gas', 1800000, 'cash', 'Gas plant', 'Cooking gas refill'],
+            ['internet-tv', 2500000, 'transfer', 'Internet provider', 'Monthly internet subscription'],
+        ] as $i => [$slug, $amount, $method, $payee, $description]) {
+            FinanceTransaction::create([
+                'property_id' => $property->id,
+                'category_id' => FinanceCategory::bySlug($slug)->id,
+                'type' => 'expense',
+                'amount' => $amount,
+                'currency' => 'NGN',
+                'occurred_on' => now()->startOfMonth()->addDays($i * 3)->toDateString(),
+                'payment_method' => $method,
+                'counterparty' => $payee,
+                'description' => $description,
+                'recorded_by' => $admin->id,
+            ]);
+        }
+
+        FinanceTransaction::create([
+            'property_id' => $property->id,
+            'category_id' => FinanceCategory::bySlug('food-beverage')->id,
+            'type' => 'income',
+            'amount' => 3500000,
+            'currency' => 'NGN',
+            'occurred_on' => now()->startOfMonth()->addDays(2)->toDateString(),
+            'payment_method' => 'pos',
+            'counterparty' => 'Walk-in guests',
+            'description' => 'Restaurant sales',
+            'recorded_by' => $admin->id,
+        ]);
     }
 }

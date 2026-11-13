@@ -27,6 +27,13 @@
                 ['label' => 'Bookings', 'route' => 'admin.bookings.index', 'pattern' => 'admin.bookings.*', 'icon' => 'calendar'],
                 ['label' => 'Guest forms', 'route' => 'guest-forms.index', 'pattern' => 'guest-forms.*', 'icon' => 'clipboard'],
             ],
+            'Operations' => [
+                ['label' => 'Overview', 'route' => 'ops.dashboard', 'pattern' => 'ops.dashboard', 'icon' => 'briefcase'],
+                ['label' => 'Inventory', 'route' => 'ops.inventory.index', 'pattern' => 'ops.inventory.*', 'icon' => 'clipboard'],
+                ['label' => 'Shifts', 'route' => 'ops.shifts.index', 'pattern' => 'ops.shifts.*', 'icon' => 'clock'],
+                ['label' => 'Staff', 'route' => 'ops.staff.index', 'pattern' => 'ops.staff.*', 'icon' => 'users'],
+                ['label' => 'Accounting', 'route' => 'ops.finance.index', 'pattern' => 'ops.finance.*', 'icon' => 'wallet'],
+            ],
             'Events' => [
                 ['label' => 'Approvals', 'route' => 'admin.events.index', 'pattern' => 'admin.events.index', 'icon' => 'check'],
                 ['label' => 'Manage events', 'route' => 'events.manage.index', 'pattern' => 'events.manage.*', 'icon' => 'calendar'],

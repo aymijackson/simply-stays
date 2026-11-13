@@ -12,7 +12,7 @@ class CoreDatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        foreach (['Guest', 'Host', 'Agent', 'ServiceProvider', 'Admin'] as $role) {
+        foreach (['Guest', 'Host', 'Agent', 'ServiceProvider', 'Admin', 'Staff'] as $role) {
             Role::findOrCreate($role, 'web');
         }
     }
